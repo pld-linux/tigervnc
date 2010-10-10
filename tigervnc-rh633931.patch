@@ -1,0 +1,87 @@
+diff -up tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/Input.cc.rh633931 tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/Input.cc
+--- tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/Input.cc.rh633931	2010-09-16 11:29:33.670000097 +0200
++++ tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/Input.cc	2010-09-16 12:59:31.530002411 +0200
+@@ -271,6 +271,19 @@ void InputDevice::initInputDevice(void)
+ #endif
+ }
+ 
++static inline void pressKey(DeviceIntPtr dev, int kc, bool down, const char *msg)
++{
++	int action;
++	unsigned int n;
++
++	if (msg != NULL)
++		vlog.debug("%s %d %s", msg, kc, down ? "down" : "up");
++
++	action = down ? KeyPress : KeyRelease;
++	n = GetKeyboardEvents(eventq, dev, action, kc);
++	enqueueEvents(dev, n);
++}
++
+ #define IS_PRESSED(keyc, keycode) \
+ 	((keyc)->down[(keycode) >> 3] & (1 << ((keycode) & 7)))
+ 
+@@ -294,7 +307,7 @@ public:
+ 	~ModifierState()
+ 	{
+ 		for (int i = 0; i < nKeys; i++)
+-			generateXKeyEvent(keys[i], !pressed);
++			pressKey(dev, keys[i], !pressed, "fake keycode");
+ 		delete [] keys;
+ 	}
+ 
+@@ -389,22 +402,10 @@ private:
+ 		if (keycode) {
+ 			if (!keys) keys = new int[maxKeysPerMod];
+ 			keys[nKeys++] = keycode;
+-			generateXKeyEvent(keycode, down);
++			pressKey(dev, keycode, down, "fake keycode");
+ 		}
+ 	}
+ 
+-	void generateXKeyEvent(int keycode, bool down)
+-	{
+-		int n, action;
+-
+-		action = down ? KeyPress : KeyRelease;
+-		n = GetKeyboardEvents(eventq, dev, action, keycode);
+-		enqueueEvents(dev, n);
+-
+-		vlog.debug("fake keycode %d %s", keycode,
+-			   down ? "down" : "up");
+-	}
+-
+ 	int modIndex;
+ 	int nKeys;
+ 	int *keys;
+@@ -503,8 +504,8 @@ void InputDevice::keyEvent(rdr::U32 keys
+ 	KeyCode minKeyCode, maxKeyCode;
+ 	KeyCode *modmap = NULL;
+ 	int mapWidth;
+-	unsigned int i, n;
+-	int j, k, action, state, maxKeysPerMod;
++	unsigned int i;
++	int j, k, state, maxKeysPerMod;
+ 
+ 	initInputDevice();
+ 
+@@ -691,12 +692,14 @@ ModeSwitchFound:
+ 					modeSwitch.release();
+ 			}
+ 		}
+-	}
++		/*
++		 * Ensure ModifierState objects are not destroyed before
++		 * pressKey call, otherwise fake modifier keypress can be lost.
++		 */
++		pressKey(keyboardDev, kc, down, "keycode");
++	} else
++		pressKey(keyboardDev, kc, down, "keycode");
+ 
+-	vlog.debug("keycode %d %s", kc, down ? "down" : "up");
+-	action = down ? KeyPress : KeyRelease;
+-	n = GetKeyboardEvents(eventq, keyboardDev, action, kc);
+-	enqueueEvents(keyboardDev, n);
+ 
+         FREE_MAPS;
+ 	
