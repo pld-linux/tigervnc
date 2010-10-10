@@ -1,6 +1,5 @@
 # TODO:
 # - tigervnc.init
-# - descriptions!
 
 %define		snap		r4159
 %define		xversion	1.9
@@ -103,6 +102,12 @@ TigerVNC is a suite of VNC servers and clients that have a focus on
 performance and remote display functionality. Originally this software
 was based on the (never released) VNC 4 branch of TightVNC.
 
+%description -l pl.UTF-8
+TigerVNC to zestaw serwerów i klientów VNC, które koncentrują się
+na wydajności i funkcjonalności zdalnego wyświetlania. Pierwotnie
+oprogramowanie oparte było na (nigdy nie wydanej)
+gałęzi VNC 4 TightVNC.
+
 %package server
 Summary:	VNC X server - TigerVNC version
 Summary(pl.UTF-8):	X serwer VNC - wersja TigerVNC
@@ -132,8 +137,16 @@ vncpasswd. vncconfig is used to configure and control a running
 instance of Xvnc, or any other X server with the VNC extension.
 vncpasswd generates password file (both on server and viewer side).
 
+%description utils -l pl.UTF-8
+Ten pakiet zawiera dodatkowe narzędzia do tightvnc: vncconfig i
+vncpasswd. vncconfig służy do konfigurowania i kontroli działającej
+instancji Xvnc lub innego serwera X z rozszerzeniem VNC.
+vncpasswd służy to tworzenia pliku z hasłem (zarówno po
+stronie serwera, jak i przeglądarki).
+
 %package -n xorg-xserver-libvnc
 Summary:	TigerVNC module for X.org server
+Summary(pl.UTF-8):	Moduł TigerVNC dla servera X.org
 Group:		X11/Servers
 %requires_eq_to	xorg-xserver-server xorg-xserver-server-source
 Provides:	xorg-xserver-module(vnc)
@@ -141,6 +154,10 @@ Provides:	xorg-xserver-module(vnc)
 %description -n xorg-xserver-libvnc
 This package contains libvnc.so module for X.org server,
 allowing others to access the desktop on your machine.
+
+%description -n xorg-xserver-libvnc -l pl.UTF-8
+Ten pakiet zawiera moduł libvnc.so dla serwera X.org,
+pozwalający na zdalny dostęp do pulpitu.
 
 %prep
 %setup -q -n %{name}
