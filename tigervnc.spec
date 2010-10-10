@@ -246,6 +246,14 @@ install media/icons/tigervnc.svg $RPM_BUILD_ROOT%{_iconsdir}/hicolor/scalable/ap
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+[ ! -x /usr/bin/update-desktop-database ] || %update_desktop_database_post
+[ ! -x /usr/bin/gtk-update-icon-cache ] || %update_icon_cache hicolor
+
+%postun
+[ ! -x /usr/bin/update-desktop-database ] || %update_desktop_database_postun
+[ ! -x /usr/bin/gtk-update-icon-cache ] || %update_icon_cache hicolor
+
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc doc/*
