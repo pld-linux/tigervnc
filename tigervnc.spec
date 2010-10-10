@@ -1,10 +1,11 @@
 # TODO:
 # - tigervnc.init
+# - descriptions!
 
 %define		snap	r4159
 
-Summary:	TigerVNC - application based on the VNC version 3.3.3r2
-Summary(pl.UTF-8):	TigerVNC - aplikacja bazująca na VNC w wersji 3.3.3r2
+Summary:	A TigerVNC remote display system
+Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.0.90
 Release:	0.1
@@ -102,8 +103,8 @@ wystarczająco szybkie, natomiast z TightVNC możesz pracować zdalnie
 niemal w czasie rzeczywistym.
 
 %package server
-Summary:	VNC X server - tightvnc version
-Summary(pl.UTF-8):	X serwer VNC - wersja tightvnc
+Summary:	VNC X server - TigerVNC version
+Summary(pl.UTF-8):	X serwer VNC - wersja TigerVNC
 Group:		X11/Applications/Networking
 Requires:	xorg-app-rgb
 # for vncpasswd tool
@@ -119,8 +120,8 @@ This package contains VNC X server in tightvnc version.
 Ten pakiet zawiera X serwer VNC w wersji tightvnc.
 
 %package utils
-Summary:	Additional utilities for tightvnc
-Summary(pl.UTF-8):	Dodatkowe narzędzia do tightvnc
+Summary:	Additional utilities for TigerVNC
+Summary(pl.UTF-8):	Dodatkowe narzędzia do TigerVNC
 Group:		X11/Applications/Networking
 Obsoletes:	vnc-utils
 
