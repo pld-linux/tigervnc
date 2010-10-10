@@ -2,7 +2,8 @@
 # - tigervnc.init
 # - descriptions!
 
-%define		snap	r4159
+%define		snap		r4159
+%define		xversion	1.9.0.901
 
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
@@ -19,7 +20,7 @@ URL:		http://www.tigervnc.com/
 BuildRequires:	cpp
 BuildRequires:	libjpeg-devel
 BuildRequires:	zlib-devel
-BuildRequires:	xorg-xserver-server-source >= 1.9
+BuildRequires:	xorg-xserver-server-source = %{xversion}
 # xserver BRs, should match xorg-xserver-server.spec
 BuildRequires:	Mesa-libGL-devel >= 7.8.1
 # for glx headers
@@ -137,9 +138,24 @@ vncpasswd. vncconnect służy do połączenia serwera Xvnc z nasłuchującym
 vncviewerem. vncpasswd służy to tworzenia pliku z hasłem (zarówno po
 stronie serwera, jak i przeglądarki).
 
+%package -n xorg-xserver-libvnc
+Summary:	TigerVNC module for X.org server
+Group:		X11/Servers
+Requires:	xorg-xserver-server = %{xversion}
+Provides:	xorg-xserver-module(vnc)
+
+%description -n xorg-xserver-libvnc
+This package contains libvnc.so module for X.org server,
+allowing others to access the desktop on your machine.
+
 %prep
 %setup -q -n %{name}
 %{__sed} -i -e 's|^po/Makefile.in||' configure.ac
+
+cp -a %{_usrsrc}/xorg-xserver-server-%{xversion}/* unix/xserver
+cd unix/xserver
+patch -p1 <../xserver19.patch
+#%patch11 -p1
 
 %build
 %{__gettextize}
@@ -154,13 +170,55 @@ stronie serwera, jak i przeglądarki).
 
 %{__make}
 
+cd unix/xserver
+%{__automake}
+%{__autoconf}
+%configure \
+	--disable-xorg \
+	--disable-xnest \
+	--disable-xvfb \
+	--disable-dmx \
+	--disable-xwin \
+	--disable-xephyr \
+	--disable-kdrive \
+	--with-pic \
+	--disable-static \
+	--disable-xinerama \
+	--disable-composite \
+	--with-default-font-path="catalogue:%{_sysconfdir}/X11/fontpath.d,built-ins" \
+	--with-fontdir=%{_datadir}/X11/fonts \
+	--with-xkb-output=%{_localstatedir}/lib/xkb \
+	--enable-install-libxf86config \
+	--disable-dri2 \
+	--enable-glx \
+	--disable-config-dbus \
+	--disable-config-hal \
+	--disable-config-udev \
+	--with-dri-driver-path=%{_libdir}/dri \
+	--without-xmlto \
+	--without-fop \
+	--without-doxygen \
+	--disable-devel-docs \
+	--disable-builddocs
+
+%{__make}
+cd -
+
+# Build icons
+cd media
+%{__make}
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},%{_sysconfdir}}
 
-cd unix
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+cd unix/xserver/hw/vnc
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
+cd -
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -176,15 +234,19 @@ rm -rf $RPM_BUILD_ROOT
 %files server
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/tightvncserver.conf
+%attr(755,root,root) %{_bindir}/Xvnc
 %attr(755,root,root) %{_bindir}/x0vncserver
 %attr(755,root,root) %{_bindir}/vncserver
 %{_datadir}/vnc
+%{_mandir}/man1/Xvnc.1*
 %{_mandir}/man1/x0vncserver.1*
 %{_mandir}/man1/vncserver.1*
 
 %files utils
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/vncconnect
 %attr(755,root,root) %{_bindir}/vncpasswd
-%{_mandir}/man1/vncconnect.1*
 %{_mandir}/man1/vncpasswd.1*
+
+%files -n xorg-xserver-libvnc
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/xorg/modules/extensions/libvnc.so
