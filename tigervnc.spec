@@ -25,6 +25,8 @@ Patch6:		tigervnc-viewer-reparent.patch
 Patch7:		tigervnc-as-needed.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
+BuildRequires:	ImageMagick-coder-png
+BuildRequires:	ImageMagick-coder-svg
 BuildRequires:	cpp
 BuildRequires:	libjpeg-devel
 BuildRequires:	zlib-devel
