@@ -29,6 +29,7 @@ BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
 BuildRequires:	ImageMagick-coder-svg
 BuildRequires:	cpp
+BuildRequires:	gnutls-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	zlib-devel
 BuildRequires:	xorg-xserver-server-source >= %{xversion}
