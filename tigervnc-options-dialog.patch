@@ -1,0 +1,10 @@
+--- tigervnc/unix/vncviewer/OptionsDialog.h~	2010-10-26 13:40:29.148203596 +0200
++++ tigervnc/unix/vncviewer/OptionsDialog.h	2010-10-26 13:40:07.863203599 +0200
+@@ -198,6 +198,7 @@
+     y += secVnc.height();
+     secPlain.move(xPad, y);
+     y += secPlain.height();
++    xPad -= SECOND_COL_XPAD;
+ #endif
+ 
+     /* Render "OK" and "Cancel" buttons */
