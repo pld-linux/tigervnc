@@ -99,7 +99,7 @@ Provides:	vnc-client
 Conflicts:	vnc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_xserverver	%(LC_ALL=C rpm -q --qf '%{V}' xorg-xserver-server-source)
+%define		_xserverver	%(LC_ALL=C rpm -q --qf '%{V}' xorg-xserver-server-source 2> /dev/null)
 
 %description
 TigerVNC is a suite of VNC servers and clients that have a focus on
