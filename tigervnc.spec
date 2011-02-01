@@ -2,7 +2,7 @@
 # - tigervnc.init
 
 %define		snap		r4159
-%define		xversion	1.9
+%define		xversion	1.9.3
 
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
@@ -18,7 +18,6 @@ Source1:	%{name}.desktop
 Patch0:		tigervnc-cookie.patch
 Patch1:		tigervnc-ldnow.patch
 Patch2:		tigervnc-rh102434.patch
-Patch3:		tigervnc-rh611677-generate_modkeymap-max_keys.patch
 Patch4:		tigervnc-rh611677.patch
 Patch5:		tigervnc-rh633931.patch
 Patch6:		tigervnc-viewer-reparent.patch
@@ -179,7 +178,6 @@ pozwalający na zdalny dostęp do pulpitu.
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 cd unix/xserver
 patch -p1 <../xserver19.patch
-%patch3 -p1
 
 %build
 %{__gettextize}
