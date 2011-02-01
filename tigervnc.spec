@@ -18,11 +18,11 @@ Source1:	%{name}.desktop
 Patch0:		tigervnc-cookie.patch
 Patch1:		tigervnc-ldnow.patch
 Patch2:		tigervnc-rh102434.patch
-Patch4:		tigervnc-rh611677.patch
-Patch5:		tigervnc-rh633931.patch
-Patch6:		tigervnc-viewer-reparent.patch
-Patch7:		tigervnc-as-needed.patch
-Patch8:		tigervnc-options-dialog.patch
+Patch3:		tigervnc-rh611677.patch
+Patch4:		tigervnc-rh633931.patch
+Patch5:		tigervnc-viewer-reparent.patch
+Patch6:		tigervnc-as-needed.patch
+Patch7:		tigervnc-options-dialog.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -167,11 +167,11 @@ pozwalający na zdalny dostęp do pulpitu.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 
 %{__sed} -i -e 's|^po/Makefile.in||' configure.ac
 
