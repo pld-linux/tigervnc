@@ -8,32 +8,32 @@ Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.0.90
-Release:	11
+Release:	12
 License:	GPL v2
 Group:		X11/Applications/Networking
 #Source0:	http://dl.sourceforge.net/tigervnc/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{snap}.tar.bz2
 # Source0-md5:	bd83717c960fb9e585387948b5cb41e2
 Source1:	%{name}.desktop
-Patch0:		tigervnc-cookie.patch
-Patch1:		tigervnc-ldnow.patch
-Patch2:		tigervnc-rh102434.patch
-Patch3:		tigervnc-rh611677.patch
-Patch4:		tigervnc-rh633931.patch
-Patch5:		tigervnc-viewer-reparent.patch
-Patch6:		tigervnc-as-needed.patch
-Patch7:		tigervnc-options-dialog.patch
+Patch0:		%{name}-cookie.patch
+Patch1:		%{name}-ldnow.patch
+Patch2:		%{name}-rh102434.patch
+Patch3:		%{name}-rh611677.patch
+Patch4:		%{name}-rh633931.patch
+Patch5:		%{name}-viewer-reparent.patch
+Patch6:		%{name}-as-needed.patch
+Patch7:		%{name}-options-dialog.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
 BuildRequires:	ImageMagick-coder-svg
+BuildRequires:	Mesa-libGL-devel >= 7.8.1
 BuildRequires:	cpp
 BuildRequires:	gnutls-devel
 BuildRequires:	libjpeg-devel
-BuildRequires:	zlib-devel
 BuildRequires:	xorg-xserver-server-source >= %{xversion}
+BuildRequires:	zlib-devel
 # xserver BRs, should match xorg-xserver-server.spec
-BuildRequires:	Mesa-libGL-devel >= 7.8.1
 # for glx headers
 BuildRequires:	OpenGL-GLX-devel
 BuildRequires:	autoconf >= 2.57
@@ -52,7 +52,7 @@ BuildRequires:	xorg-lib-libXau-devel
 BuildRequires:	xorg-lib-libXaw-devel
 BuildRequires:	xorg-lib-libXdamage-devel
 BuildRequires:	xorg-lib-libXdmcp-devel
-BuildRequires:	xorg-lib-libXext-devel  >= 1.0.99.4
+BuildRequires:	xorg-lib-libXext-devel >= 1.0.99.4
 BuildRequires:	xorg-lib-libXfont-devel >= 1.4.2
 BuildRequires:	xorg-lib-libXi-devel >= 1.2.99.1
 BuildRequires:	xorg-lib-libXmu-devel
@@ -94,6 +94,8 @@ BuildRequires:	xorg-proto-xf86miscproto-devel
 BuildRequires:	xorg-proto-xf86vidmodeproto-devel >= 2.2.99.1
 BuildRequires:	xorg-proto-xproto-devel >= 7.0.17
 BuildRequires:	xorg-util-util-macros >= 1.10
+Requires(post,postun):	gtk-update-icon-cache
+Requires(post,postun):	hicolor-icon-theme
 Provides:	vnc-client
 Conflicts:	vnc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -268,11 +270,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 [ ! -x /usr/bin/update-desktop-database ] || %update_desktop_database_post
-[ ! -x /usr/bin/gtk-update-icon-cache ] || %update_icon_cache hicolor
+%update_icon_cache hicolor
 
 %postun
 [ ! -x /usr/bin/update-desktop-database ] || %update_desktop_database_postun
-[ ! -x /usr/bin/gtk-update-icon-cache ] || %update_icon_cache hicolor
+%update_icon_cache hicolor
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
