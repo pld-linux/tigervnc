@@ -1,28 +1,25 @@
 # TODO:
 # - tigervnc.init
 
-%define		snap		r4159
-%define		xversion	1.9.3
+%define		snap		r4237
+%define		xversion	1.10.0
 
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.0.90
-Release:	16
+Release:	0.1
 License:	GPL v2
 Group:		X11/Applications/Networking
 #Source0:	http://dl.sourceforge.net/tigervnc/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	bd83717c960fb9e585387948b5cb41e2
+# Source0-md5:	171a4310bc5bc8d5ab5a83c404cf551b
 Source1:	%{name}.desktop
 Patch0:		%{name}-cookie.patch
 Patch1:		%{name}-ldnow.patch
 Patch2:		%{name}-rh102434.patch
-Patch3:		%{name}-rh611677.patch
-Patch4:		%{name}-rh633931.patch
 Patch5:		%{name}-viewer-reparent.patch
 Patch6:		%{name}-as-needed.patch
-Patch7:		%{name}-options-dialog.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -169,17 +166,14 @@ pozwalający na zdalny dostęp do pulpitu.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 
 %{__sed} -i -e 's|^po/Makefile.in||' configure.ac
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 cd unix/xserver
-patch -p1 <../xserver19.patch
+patch -p1 <../xserver110.patch
 
 %build
 %{__gettextize}
