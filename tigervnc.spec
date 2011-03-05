@@ -20,6 +20,7 @@ Patch1:		%{name}-ldnow.patch
 Patch2:		%{name}-rh102434.patch
 Patch5:		%{name}-viewer-reparent.patch
 Patch6:		%{name}-as-needed.patch
+Patch7:		%{name}-110patch.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -168,6 +169,7 @@ pozwalający na zdalny dostęp do pulpitu.
 %patch2 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %{__sed} -i -e 's|^po/Makefile.in||' configure.ac
 
