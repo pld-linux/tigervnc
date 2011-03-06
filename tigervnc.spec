@@ -8,7 +8,8 @@ Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.1
+# leave this '16' alone, change only last number
+Release:	16.%{snap}.1
 License:	GPL v2
 Group:		X11/Applications/Networking
 #Source0:	http://dl.sourceforge.net/tigervnc/%{name}-%{version}.tar.gz
@@ -199,7 +200,6 @@ cd unix/xserver
 	--disable-config-dbus \
 	--disable-config-hal \
 	--disable-config-udev \
-	--disable-builddocs \
 	--without-xmlto \
 	--without-fop \
 	--without-doxygen \
@@ -225,10 +225,8 @@ cd unix/xserver
 	--enable-glx-tls \
 	--enable-install-libxf86config \
 	--enable-record \
-	--disable-xsdl \
 	--disable-xfake \
 	--enable-secure-rpc \
-	--with-dri-driver-path=%{_libdir}/xorg/modules/dri \
 	--with-xkb-output=/var/lib/xkb
 
 %{__make}
