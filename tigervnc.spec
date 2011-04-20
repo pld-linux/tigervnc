@@ -9,7 +9,7 @@ Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.0.90
 # leave this '16' alone, change only last number
-Release:	16.%{snap}.2
+Release:	16.%{snap}.3
 License:	GPL v2
 Group:		X11/Applications/Networking
 #Source0:	http://dl.sourceforge.net/tigervnc/%{name}-%{version}.tar.gz
