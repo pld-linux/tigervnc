@@ -9,19 +9,19 @@ Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.0.90
 # leave this '16' alone, change only last number
-Release:	16.%{snap}.3
+#Release:	16.%{snap}.3
+Release:	17
 License:	GPL v2
 Group:		X11/Applications/Networking
-#Source0:	http://dl.sourceforge.net/tigervnc/%{name}-%{version}.tar.gz
-Source0:	%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	171a4310bc5bc8d5ab5a83c404cf551b
+Source0:	http://dl.sourceforge.net/tigervnc/1.0.90%20(1.1beta1)/%{name}-%{version}.tar.gz
+# Source0-md5:	90db4d34543e20f053e2ac93745af7e3
+#Source0:	%{name}-%{version}-%{snap}.tar.bz2
 Source1:	%{name}.desktop
 Patch0:		%{name}-cookie.patch
 Patch1:		%{name}-ldnow.patch
 Patch2:		%{name}-rh102434.patch
 Patch5:		%{name}-viewer-reparent.patch
 Patch6:		%{name}-as-needed.patch
-Patch7:		%{name}-110patch.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -39,6 +39,7 @@ BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake
 BuildRequires:	libdrm-devel >= 2.4.5
 BuildRequires:	libtool
+BuildRequires:	nasm
 BuildRequires:	ncurses-devel
 BuildRequires:	pam-devel
 BuildRequires:	perl-base
@@ -166,19 +167,18 @@ Ten pakiet zawiera moduł libvnc.so dla serwera X.org,
 pozwalający na zdalny dostęp do pulpitu.
 
 %prep
-%setup -q -n %{name}
+%setup -q
+# -n %{name}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch5 -p1
-%patch6 -p1
-%patch7 -p1
-
-%{__sed} -i -e 's|^po/Makefile.in||' configure.ac
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 cd unix/xserver
 patch -p1 <../xserver110.patch
+cd -
+%patch6 -p1
 
 %build
 %{__gettextize}
