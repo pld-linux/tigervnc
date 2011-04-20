@@ -13,9 +13,10 @@ Version:	1.0.90
 Release:	17
 License:	GPL v2
 Group:		X11/Applications/Networking
-Source0:	http://dl.sourceforge.net/tigervnc/1.0.90%20(1.1beta1)/%{name}-%{version}.tar.gz
-# Source0-md5:	90db4d34543e20f053e2ac93745af7e3
 #Source0:	%{name}-%{version}-%{snap}.tar.bz2
+#Source0:	http://dl.sourceforge.net/tigervnc/1.0.90%20(1.1beta1)/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}.tar.gz
+# Source0-md5:	90db4d34543e20f053e2ac93745af7e3
 Source1:	%{name}.desktop
 Patch0:		%{name}-cookie.patch
 Patch1:		%{name}-ldnow.patch
