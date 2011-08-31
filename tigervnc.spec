@@ -1,7 +1,6 @@
 # TODO:
 # - tigervnc.init
 
-%define		snap		r4237
 %define		xversion	1.10.0
 
 Summary:	A TigerVNC remote display system
