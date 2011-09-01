@@ -77,7 +77,7 @@ BuildRequires:	xorg-proto-glproto-devel >= 1.4.10
 BuildRequires:	xorg-proto-inputproto-devel >= 1.9.99.902
 BuildRequires:	xorg-proto-kbproto-devel >= 1.0.3
 BuildRequires:	xorg-proto-printproto-devel
-BuildRequires:	xorg-proto-randrproto-devel >= 1.2.99.3
+BuildRequires:	xorg-proto-randrproto-devel >= 1.3
 BuildRequires:	xorg-proto-recordproto-devel
 BuildRequires:	xorg-proto-renderproto-devel >= 0.11
 BuildRequires:	xorg-proto-resourceproto-devel
@@ -90,7 +90,7 @@ BuildRequires:	xorg-proto-xf86dgaproto-devel >= 2.0.99.1
 BuildRequires:	xorg-proto-xf86driproto-devel >= 2.1.0
 BuildRequires:	xorg-proto-xf86miscproto-devel
 BuildRequires:	xorg-proto-xf86vidmodeproto-devel >= 2.2.99.1
-BuildRequires:	xorg-proto-xproto-devel >= 7.0.17
+BuildRequires:	xorg-proto-xproto-devel >= 7.0.22
 BuildRequires:	xorg-util-util-macros >= 1.10
 Requires(post,postun):	gtk-update-icon-cache
 Requires(post,postun):	hicolor-icon-theme
