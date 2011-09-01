@@ -1,0 +1,95 @@
+diff -up tigervnc-1.0.90/unix/xserver/hw/vnc/Input.cc.xorg111 tigervnc-1.0.90/unix/xserver/hw/vnc/Input.cc
+--- tigervnc-1.0.90/unix/xserver/hw/vnc/Input.cc.xorg111	2011-05-12 10:42:52.813229993 +0200
++++ tigervnc-1.0.90/unix/xserver/hw/vnc/Input.cc	2011-05-12 10:52:41.036211939 +0200
+@@ -305,7 +305,7 @@ static inline void pressKey(DeviceIntPtr
+ 		vlog.debug("%s %d %s", msg, kc, down ? "down" : "up");
+ 
+ 	action = down ? KeyPress : KeyRelease;
+-	n = GetKeyboardEvents(eventq, dev, action, kc);
++	n = GetKeyboardEvents(eventq, dev, action, kc, NULL);
+ 	enqueueEvents(dev, n);
+ }
+ 
+@@ -341,8 +341,11 @@ public:
+ 		int state, maxKeysPerMod, keycode;
+ #if XORG >= 17
+ 		KeyCode *modmap = NULL;
++		DeviceIntPtr master;
+ 
+-		state = XkbStateFieldFromRec(&dev->u.master->key->xkbInfo->state);
++		master = GetMaster(dev, MASTER_KEYBOARD);
++
++		state = XkbStateFieldFromRec(&master->key->xkbInfo->state);
+ #else
+ 		KeyClassPtr keyc = dev->key;
+ 		state = keyc->state;
+@@ -379,8 +382,10 @@ public:
+ 		KeyClassPtr keyc;
+ #if XORG >= 17
+ 		KeyCode *modmap = NULL;
++		DeviceIntPtr master;
+ 
+-		keyc = dev->u.master->key;
++		master = GetMaster(dev, MASTER_KEYBOARD);
++		keyc = master->key;
+ 		state = XkbStateFieldFromRec(&keyc->xkbInfo->state);
+ #else
+ 		keyc = dev->key;
+@@ -565,9 +570,7 @@ static inline int isModifier(KeySymsPtr
+ 
+ void InputDevice::keyEvent(rdr::U32 keysym, bool down)
+ {
+-#if XORG < 17
+ 	DeviceIntPtr master;
+-#endif
+ 	KeyClassPtr keyc;
+ 	KeySymsPtr keymap = NULL;
+ 	KeySym *map = NULL;
+@@ -596,7 +599,8 @@ void InputDevice::keyEvent(rdr::U32 keys
+ 	}
+ 
+ #if XORG >= 17
+-	keyc = keyboardDev->u.master->key;
++	master = GetMaster(keyboardDev, MASTER_KEYBOARD);
++	keyc = master->key;
+ 
+ 	keymap = XkbGetCoreMap(keyboardDev);
+ 	if (!keymap) {
+@@ -753,7 +757,7 @@ ModeSwitchFound:
+ 			XkbApplyMappingChange(keyboardDev, keymap, minKeyCode,
+ 					      maxKeyCode - minKeyCode + 1,
+ 					      NULL, serverClient);
+-			XkbCopyDeviceKeymap(keyboardDev->u.master, keyboardDev);
++			XkbCopyDeviceKeymap(master, keyboardDev);
+ #endif /* XORG < 17 */
+ 			break;
+ 		}
+diff -up tigervnc-1.0.90/unix/xserver/hw/vnc/xorg-version.h.xorg111 tigervnc-1.0.90/unix/xserver/hw/vnc/xorg-version.h
+--- tigervnc-1.0.90/unix/xserver/hw/vnc/xorg-version.h.xorg111	2011-05-12 10:40:34.109227333 +0200
++++ tigervnc-1.0.90/unix/xserver/hw/vnc/xorg-version.h	2011-05-12 10:41:10.970229530 +0200
+@@ -36,6 +36,8 @@
+ #define XORG 19
+ #elif XORG_VERSION_CURRENT < ((1 * 10000000) + (10 * 100000) + (99 * 1000))
+ #define XORG 110
++#elif XORG_VERSION_CURRENT < ((1 * 10000000) + (11 * 100000) + (99 * 1000))
++#define XORG 111
+ #else
+ #error "X.Org newer than 1.10 is not supported"
+ #endif
+diff -up tigervnc-1.0.90/unix/xserver/hw/vnc/xvnc.cc.xorg111 tigervnc-1.0.90/unix/xserver/hw/vnc/xvnc.cc
+--- tigervnc-1.0.90/unix/xserver/hw/vnc/xvnc.cc.xorg111	2011-05-12 10:54:21.068235787 +0200
++++ tigervnc-1.0.90/unix/xserver/hw/vnc/xvnc.cc	2011-05-12 10:59:01.867225478 +0200
+@@ -670,8 +670,13 @@ vfbUninstallColormap(ColormapPtr pmap)
+     {
+ 	if (pmap->mid != pmap->pScreen->defColormap)
+ 	{
++#if XORG < 111
+ 	    curpmap = (ColormapPtr) LookupIDByType(pmap->pScreen->defColormap,
+ 						   RT_COLORMAP);
++#else
++	    dixLookupResourceByType((pointer *) &curpmap, pmap->pScreen->defColormap,
++				    RT_COLORMAP, serverClient, DixUnknownAccess);
++#endif
+ 	    (*pmap->pScreen->InstallColormap)(curpmap);
+ 	}
+     }
