@@ -1,13 +1,13 @@
 # TODO:
 # - tigervnc.init
 
-%define		xversion	1.10.0
+%define		xversion	1.11.1
 
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.1.0
-Release:	3.2
+Release:	4
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	http://dl.sourceforge.net/tigervnc/1.1.0/%{name}-%{version}.tar.gz
@@ -20,6 +20,7 @@ Patch3:		%{name}-viewer-reparent.patch
 Patch4:		%{name}-as-needed.patch
 Patch5:		%{name}-ipv6.patch
 Patch6:		%{name}-xorg111.patch
+Patch7:		%{name}-rh692048.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -172,6 +173,7 @@ pozwalający na zdalny dostęp do pulpitu.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p0
+%patch7 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 cd unix/xserver
@@ -214,7 +216,7 @@ cd unix/xserver
 	--disable-xephyr \
 	--disable-kdrive \
 	--disable-xfbdev \
-	--disable-dri2 \
+	--enable-dri2 \
 	--with-pic \
 	--disable-static \
 	--disable-xinerama \
@@ -228,7 +230,8 @@ cd unix/xserver
 	--enable-record \
 	--disable-xfake \
 	--enable-secure-rpc \
-	--with-xkb-output=/var/lib/xkb
+	--with-xkb-output=/var/lib/xkb \
+	--disable-unit-tests
 
 %{__make}
 cd -
