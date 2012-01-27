@@ -1,13 +1,13 @@
 # TODO:
 # - tigervnc.init
 
-%define		xversion	1.11.1
+%define		xversion	1.11.3
 
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.1.0
-Release:	8
+Release:	9
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	http://dl.sourceforge.net/tigervnc/1.1.0/%{name}-%{version}.tar.gz
