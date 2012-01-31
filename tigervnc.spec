@@ -123,6 +123,7 @@ Requires:	%{name}-utils = %{version}-%{release}
 # for mcookie
 Requires:	util-linux
 Requires:	libjpeg-turbo
+Requires:	xorg-app-xauth
 Obsoletes:	vnc-server
 
 %description server
