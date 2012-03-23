@@ -6,12 +6,12 @@
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
-Version:	1.1.0
-Release:	11
+Version:	1.2.0
+Release:	0.1
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	http://dl.sourceforge.net/tigervnc/1.1.0/%{name}-%{version}.tar.gz
-# Source0-md5:	1a5598b4a2ac530fb51411438959e11e
+# Source0-md5:	3a5755b4ed600a81c3a17976c6f8420d
 Source1:	%{name}.desktop
 Patch0:		%{name}-cookie.patch
 Patch1:		%{name}-ldnow.patch
@@ -21,6 +21,10 @@ Patch4:		%{name}-as-needed.patch
 Patch5:		%{name}-ipv6.patch
 Patch6:		%{name}-xorg111.patch
 Patch7:		%{name}-rh692048.patch
+Patch8:		gnutls3.patch
+Patch9:		no-bashizm.patch
+Patch10:	xorg112.patch
+Patch11:	cmake-mandir.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -65,7 +69,7 @@ BuildRequires:	xorg-lib-libXxf86dga-devel
 BuildRequires:	xorg-lib-libXxf86misc-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
 BuildRequires:	xorg-lib-libfontenc-devel
-BuildRequires:	xorg-lib-libpciaccess-devel >= 0.8.0
+BuildRequires:	xorg-lib-libpciaccess-devel >= 0.13
 BuildRequires:	xorg-lib-libxkbfile-devel
 BuildRequires:	xorg-lib-libxkbui-devel >= 1.0.2
 BuildRequires:	xorg-lib-xtrans-devel >= 1.2.2
@@ -171,33 +175,30 @@ pozwalający na zdalny dostęp do pulpitu.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
+#patch3 -p1
 %patch4 -p1
 %patch5 -p0
 %patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch11 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 cd unix/xserver
 patch -p1 <../xserver110.patch
 cd -
 %patch6 -p1
+%patch10 -p1
 
 %build
-%{__gettextize}
-%{__libtoolize}
-%{__aclocal}
-%{__autoconf}
-%{__autoheader}
-%{__automake}
-
-%{configure} \
-	--with-system-jpeg
-
+%cmake .
 %{__make}
 
 cd unix/xserver
-%{__automake}
+%{__aclocal} -I m4
 %{__autoconf}
+%{__automake}
+export CXXFLAGS="%{rpmcxxflags} -fpermissive"
 %configure \
 	--with-os-name="PLD/Linux" \
 	--with-os-vendor="PLD/Team" \
@@ -217,6 +218,7 @@ cd unix/xserver
 	--disable-xephyr \
 	--disable-kdrive \
 	--disable-xfbdev \
+	--disable-dri \
 	--enable-dri2 \
 	--with-pic \
 	--disable-static \

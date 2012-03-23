@@ -73,9 +73,9 @@ diff -up tightvnc-1.5.0-20081015svn3022/unix/tx/TXWindow.h.viewer-reparent tight
    XSizeHints sizeHints;
    std::map<Atom,Time> selectionOwnTime;
    std::map<Atom,bool> selectionOwner_;
-diff -up tightvnc-1.5.0-20081015svn3022/unix/vncviewer/CConn.cxx.viewer-reparent tightvnc-1.5.0-20081015svn3022/unix/vncviewer/CConn.cxx
---- tightvnc-1.5.0-20081015svn3022/unix/vncviewer/CConn.cxx.viewer-reparent	2008-10-23 13:11:39.000000000 +0200
-+++ tightvnc-1.5.0-20081015svn3022/unix/vncviewer/CConn.cxx	2008-10-23 13:11:39.000000000 +0200
+diff -up tightvnc-1.5.0-20081015svn3022/vncviewer/CConn.cxx.viewer-reparent tightvnc-1.5.0-20081015svn3022/vncviewer/CConn.cxx
+--- tightvnc-1.5.0-20081015svn3022/vncviewer/CConn.cxx.viewer-reparent	2008-10-23 13:11:39.000000000 +0200
++++ tightvnc-1.5.0-20081015svn3022/vncviewer/CConn.cxx	2008-10-23 13:11:39.000000000 +0200
 @@ -647,10 +647,18 @@ void CConn::recreateViewport()
  
  void CConn::reconfigureViewport()
@@ -95,9 +95,9 @@ diff -up tightvnc-1.5.0-20081015svn3022/unix/vncviewer/CConn.cxx.viewer-reparent
    } else {
      int w = cp.width;
      int h = cp.height;
-diff -up tightvnc-1.5.0-20081015svn3022/unix/vncviewer/parameters.h.viewer-reparent tightvnc-1.5.0-20081015svn3022/unix/vncviewer/parameters.h
---- tightvnc-1.5.0-20081015svn3022/unix/vncviewer/parameters.h.viewer-reparent	2008-10-23 13:11:39.000000000 +0200
-+++ tightvnc-1.5.0-20081015svn3022/unix/vncviewer/parameters.h	2008-10-23 13:12:41.000000000 +0200
+diff -up tightvnc-1.5.0-20081015svn3022/vncviewer/parameters.h.viewer-reparent tightvnc-1.5.0-20081015svn3022/vncviewer/parameters.h
+--- tightvnc-1.5.0-20081015svn3022/vncviewer/parameters.h.viewer-reparent	2008-10-23 13:11:39.000000000 +0200
++++ tightvnc-1.5.0-20081015svn3022/vncviewer/parameters.h	2008-10-23 13:12:41.000000000 +0200
 @@ -42,6 +42,7 @@ extern rfb::IntParameter compressLevel;
  extern rfb::BoolParameter noJpeg;
  extern rfb::IntParameter qualityLevel;
@@ -106,16 +106,16 @@ diff -up tightvnc-1.5.0-20081015svn3022/unix/vncviewer/parameters.h.viewer-repar
  
  extern char aboutText[];
  extern char* programName;
-diff -up tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.cxx.viewer-reparent tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.cxx
---- tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.cxx.viewer-reparent	2008-10-23 13:11:39.000000000 +0200
-+++ tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.cxx	2008-10-23 13:12:59.000000000 +0200
+diff -up tightvnc-1.5.0-20081015svn3022/vncviewer/parameters.cxx.viewer-reparent tightvnc-1.5.0-20081015svn3022/vncviewer/parameters.cxx
+--- tightvnc-1.5.0-20081015svn3022/vncviewer/parameters.cxx.viewer-reparent	2008-10-23 13:11:39.000000000 +0200
++++ tightvnc-1.5.0-20081015svn3022/vncviewer/parameters.cxx	2008-10-23 13:12:59.000000000 +0200
 @@ -106,6 +106,9 @@ StringParameter displayname("display", "
- 
- StringParameter via("via", "Gateway to tunnel via", "");
- 
+ StringParameter preferredEncoding("PreferredEncoding",
+                                   "Preferred encoding to use (Tight, ZRLE, Hextile or"
+				   " Raw)", "Tight");
 +/* Support for reparenting */
 +StringParameter embedParent("Parent", "X Window to use as a parent", "");
 +
  BoolParameter customCompressLevel("CustomCompressLevel",
- 				 "Use custom compression level. "
- 				 "Default if CompressLevel is specified.", false);
+                                   "Use custom compression level. "
+                                   "Default if CompressLevel is specified.", false);
