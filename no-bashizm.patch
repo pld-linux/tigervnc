@@ -1,0 +1,11 @@
+--- tigervnc-1.2.0/unix/xserver/hw/vnc/Makefile.am~	2012-03-23 13:48:14.821937463 +0100
++++ tigervnc-1.2.0/unix/xserver/hw/vnc/Makefile.am	2012-03-23 13:53:47.718619148 +0100
+@@ -68,7 +68,7 @@
+ 
+ pixman.h:
+ 	for i in ${XSERVERLIBS_CFLAGS}; do \
+-		if [[ "$$i" =~ "pixman" ]]; then \
++		if [[ "$$i" = *pixman* ]]; then \
+ 			PIXMANINCDIR=`echo $$i | sed s/-I//g`; \
+ 		fi; \
+ 	done; \
