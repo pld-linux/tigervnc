@@ -10,8 +10,7 @@ Version:	1.2.0
 Release:	0.1
 License:	GPL v2
 Group:		X11/Applications/Networking
-#Source0:	http://dl.sourceforge.net/tigervnc/1.2.0/%{name}-%{version}.tar.gz
-Source0:	%{name}-%{version}.tar.gz
+Source0:	http://dl.sourceforge.net/tigervnc/1.2.0/%{name}-%{version}.tar.gz
 # Source0-md5:	3a5755b4ed600a81c3a17976c6f8420d
 Source1:	%{name}.desktop
 Patch0:		%{name}-cookie.patch
