@@ -1,7 +1,7 @@
 # TODO:
 # - tigervnc.init
 
-%define		xversion	1.11.3
+%define		xversion	1.12.0
 
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
