@@ -1,0 +1,24 @@
+--- tigervnc-1.2.0/unix/xserver/hw/vnc/Makefile.am~	2011-10-31 09:14:40.000000000 +0100
++++ tigervnc-1.2.0/unix/xserver/hw/vnc/Makefile.am	2012-04-19 08:15:51.849379891 +0200
+@@ -63,7 +63,7 @@
+ BUILT_SOURCES = $(nodist_Xvnc_SOURCES)
+ 
+ fb.h: $(top_srcdir)/fb/fb.h
+-	cat $(top_srcdir)/fb/fb.h | sed -e 's,and,c_and,' -e 's,xor,c_xor,' > $(srcdir)/fb.h
++	cat $(top_srcdir)/fb/fb.h | sed -e 's,and,c_and,g' -e 's,xor,c_xor,g' > $(srcdir)/fb.h
+ 
+ pixman.h:
+ 	for i in ${XSERVERLIBS_CFLAGS}; do \
+@@ -72,10 +72,10 @@
+ 		fi; \
+ 	done; \
+ 	if [ ! "$$PIXMANINCDIR" = "" ]; then \
+-		cat $$PIXMANINCDIR/pixman.h | sed 's/xor/c_xor/' > $(srcdir)/pixman.h; \
++		cat $$PIXMANINCDIR/pixman.h | sed 's/xor/c_xor/g' > $(srcdir)/pixman.h; \
+ 	else \
+ 		echo Pixman include directory not set in XSERVERLIBS_CFLAGS \(perhaps Pixman was not found by configure?\); \
+ 	fi
+ 
+ fbrop.h: $(top_srcdir)/fb/fbrop.h
+-	cat $(top_srcdir)/fb/fbrop.h | sed -e 's,and,c_and,' -e 's,xor,c_xor,' > $(srcdir)/fbrop.h
++	cat $(top_srcdir)/fb/fbrop.h | sed -e 's,and,c_and,g' -e 's,xor,c_xor,g' > $(srcdir)/fbrop.h

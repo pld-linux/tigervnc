@@ -25,6 +25,7 @@ Patch8:		gnutls3.patch
 Patch9:		no-bashizm.patch
 Patch10:	xorg112.patch
 Patch11:	cmake-mandir.patch
+Patch12:	sed-all.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -182,6 +183,7 @@ pozwalający na zdalny dostęp do pulpitu.
 %patch8 -p1
 %patch9 -p1
 %patch11 -p1
+%patch12 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 cd unix/xserver
