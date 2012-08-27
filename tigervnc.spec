@@ -7,7 +7,7 @@ Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.2.0
-Release:	5
+Release:	6
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	http://dl.sourceforge.net/tigervnc/1.2.0/%{name}-%{version}.tar.gz
