@@ -1,0 +1,65 @@
+--- tigervnc-1.2.0/vncviewer/CConn.cxx~	2011-11-15 13:13:37.000000000 +0100
++++ tigervnc-1.2.0/vncviewer/CConn.cxx	2012-09-23 13:24:39.673278615 +0200
+@@ -100,7 +100,7 @@
+     vlog.info(_("connected to host %s port %d"), serverHost, serverPort);
+   } catch (rdr::Exception& e) {
+     vlog.error(e.str());
+-    fl_alert(e.str());
++    fl_alert("%s", e.str());
+     exit_vncviewer();
+     return;
+   }
+--- tigervnc-1.2.0/vncviewer/UserDialog.cxx~	2012-09-23 13:22:47.929949225 +0200
++++ tigervnc-1.2.0/vncviewer/UserDialog.cxx	2012-09-23 13:25:45.533276293 +0200
+@@ -167,16 +167,16 @@
+ 
+   switch (flags & 0xf) {
+   case M_OKCANCEL:
+-    return fl_choice(buffer, NULL, fl_ok, fl_cancel) == 1;
++    return fl_choice("%s", buffer, NULL, fl_ok, fl_cancel) == 1;
+   case M_YESNO:
+-    return fl_choice(buffer, NULL, fl_yes, fl_no) == 1;
++    return fl_choice("%s", buffer, NULL, fl_yes, fl_no) == 1;
+   case M_OK:
+   default:
+     if (((flags & 0xf0) == M_ICONERROR) ||
+         ((flags & 0xf0) == M_ICONWARNING))
+-      fl_alert(buffer);
++      fl_alert("%s", buffer);
+     else
+-      fl_message(buffer);
++      fl_message("%s", buffer);
+     return true;
+   }
+ 
+--- tigervnc-1.2.0/vncviewer/Viewport.cxx~	2012-01-05 13:37:04.000000000 +0100
++++ tigervnc-1.2.0/vncviewer/Viewport.cxx	2012-09-23 13:26:09.889942100 +0200
+@@ -950,7 +950,7 @@
+   case ID_INFO:
+     if (fltk_escape(cc->connectionInfo(), buffer, sizeof(buffer)) < sizeof(buffer)) {
+       fl_message_title(_("VNC connection info"));
+-      fl_message(buffer);
++      fl_message("%s", buffer);
+     }
+     break;
+   case ID_ABOUT:
+--- tigervnc-1.2.0/vncviewer/vncviewer.cxx~	2011-10-12 22:02:55.000000000 +0200
++++ tigervnc-1.2.0/vncviewer/vncviewer.cxx	2012-09-23 13:26:46.729940794 +0200
+@@ -86,7 +86,7 @@
+ void about_vncviewer()
+ {
+   fl_message_title(_("About TigerVNC Viewer"));
+-  fl_message(aboutText);
++  fl_message("%s", aboutText);
+ }
+ 
+ static void about_callback(Fl_Widget *widget, void *data)
+@@ -311,7 +311,7 @@
+   delete cc;
+ 
+   if (exitError != NULL)
+-    fl_alert(exitError);
++    fl_alert("%s", exitError);
+ 
+   return 0;
+ }
