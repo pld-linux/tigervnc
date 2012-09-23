@@ -131,3 +131,14 @@ diff -up tigervnc/unix/xserver/hw/vnc/xvnc.cc.xorg113 tigervnc/unix/xserver/hw/v
  
      miSetPixmapDepths();
  
+--- tigervnc-1.2.0/unix/xserver/hw/vnc/vncExtInit.cc~	2012-09-23 19:45:21.946623087 +0200
++++ tigervnc-1.2.0/unix/xserver/hw/vnc/vncExtInit.cc	2012-09-23 19:49:31.809947601 +0200
+@@ -943,7 +943,7 @@
+ {
+   REQUEST(xVncExtApproveConnectReq);
+   REQUEST_SIZE_MATCH(xVncExtApproveConnectReq);
+-  if (queryConnectId == (void*)stuff->opaqueId) {
++  if ((CARD32)(long)queryConnectId == stuff->opaqueId) {
+     for (int scr = 0; scr < screenInfo.numScreens; scr++) {
+       if (desktop[scr]) {
+         desktop[scr]->approveConnection(queryConnectId, stuff->approve,
