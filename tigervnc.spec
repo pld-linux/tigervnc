@@ -1,13 +1,13 @@
 # TODO:
 # - tigervnc.init
 
-%define		xversion	1.13.2
+%define		xversion	1.14.0
 
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.2.0
-Release:	13
+Release:	14
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	http://dl.sourceforge.net/tigervnc/1.2.0/%{name}-%{version}.tar.gz
@@ -29,6 +29,7 @@ Patch12:	sed-all.patch
 Patch13:	xorg113.patch
 Patch14:	xserver113.patch
 Patch15:	format-security.patch
+Patch16:	xorg114.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -196,6 +197,7 @@ cd -
 %patch6 -p1
 %patch10 -p1
 %patch13 -p1
+%patch16 -p1
 
 %build
 %cmake .

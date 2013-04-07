@@ -1,14 +1,6 @@
 diff -up xserver/configure.ac.vnc xserver/configure.ac
 --- xserver/configure.ac.vnc	2012-08-28 15:35:23.778810954 +0200
 +++ xserver/configure.ac	2012-08-28 15:54:46.396743431 +0200
-@@ -31,7 +31,6 @@ RELEASE_DATE="2012-08-21"
- RELEASE_NAME="Splashing Orca"
- AC_CONFIG_SRCDIR([Makefile.am])
- AM_INIT_AUTOMAKE([foreign dist-bzip2])
--AM_MAINTAINER_MODE
- 
- # Require xorg-macros minimum of 1.14 for XORG_COMPILER_BRAND in XORG_DEFAULT_OPTIONS
- m4_ifndef([XORG_MACROS_VERSION],
 @@ -73,6 +72,7 @@ dnl forcing an entire recompile.x
  AC_CONFIG_HEADERS(include/version-config.h)
  
