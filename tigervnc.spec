@@ -6,30 +6,23 @@
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
-Version:	1.2.0
-Release:	17
+Version:	1.3.0
+Release:	0.1
 License:	GPL v2
 Group:		X11/Applications/Networking
-Source0:	http://dl.sourceforge.net/tigervnc/1.2.0/%{name}-%{version}.tar.gz
-# Source0-md5:	3a5755b4ed600a81c3a17976c6f8420d
+Source0:	http://download.sourceforge.net/tigervnc/%{name}-%{version}.tar.bz2
+# Source0-md5:	a5158228e64d14496821a39bf3851f1b
 Source1:	%{name}.desktop
 Patch0:		%{name}-cookie.patch
 Patch1:		%{name}-ldnow.patch
 Patch2:		%{name}-rh102434.patch
-Patch3:		%{name}-viewer-reparent.patch
-Patch4:		%{name}-as-needed.patch
-Patch5:		%{name}-ipv6.patch
-Patch6:		%{name}-xorg111.patch
-Patch7:		%{name}-rh692048.patch
-Patch8:		gnutls3.patch
-Patch9:		no-bashizm.patch
-Patch10:	xorg112.patch
-Patch11:	cmake-mandir.patch
-Patch12:	sed-all.patch
-Patch13:	xorg113.patch
-Patch14:	xserver113.patch
-Patch15:	format-security.patch
-Patch16:	xorg114.patch
+Patch3:		%{name}-as-needed.patch
+Patch4:		%{name}-ipv6.patch
+Patch5:		%{name}-rh692048.patch
+Patch6:		no-bashizm.patch
+Patch7:		format-security.patch
+Patch8:		%{name}-typecast.patch
+Patch9:		xserver.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -180,24 +173,18 @@ pozwalający na zdalny dostęp do pulpitu.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-#patch3 -p1
-%patch4 -p1
-%patch5 -p0
+%patch3 -p1
+%patch4 -p0
+%patch5 -p1
+%patch6 -p1
 %patch7 -p1
 %patch8 -p1
-%patch9 -p1
-%patch11 -p1
-%patch12 -p1
-%patch15 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
+
 cd unix/xserver
-patch -p1 <%{PATCH14}
+patch -p1 <%{PATCH9}
 cd -
-%patch6 -p1
-%patch10 -p1
-%patch13 -p1
-%patch16 -p1
 
 %build
 %cmake .
