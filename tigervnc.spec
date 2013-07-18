@@ -13,6 +13,8 @@ Group:		X11/Applications/Networking
 Source0:	http://download.sourceforge.net/tigervnc/%{name}-%{version}.tar.bz2
 # Source0-md5:	a5158228e64d14496821a39bf3851f1b
 Source1:	%{name}.desktop
+Source2:	vncserver.init
+Source3:	vncserver.sysconfig
 Patch0:		%{name}-cookie.patch
 Patch1:		%{name}-ldnow.patch
 Patch2:		%{name}-rh102434.patch
@@ -260,6 +262,10 @@ install media/icons/tigervnc_32.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/32x32/ap
 install media/icons/tigervnc_48.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/48x48/apps/tigervnc.png
 install media/icons/tigervnc.svg $RPM_BUILD_ROOT%{_iconsdir}/hicolor/scalable/apps/tigervnc.svg
 
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/vncserver
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/vncserver
+
 %find_lang %{name}
 
 %clean
@@ -286,6 +292,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/Xvnc
 %attr(755,root,root) %{_bindir}/vncserver
 %attr(755,root,root) %{_bindir}/x0vncserver
+%attr(754,root,root) /etc/rc.d/init.d/vncserver
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vncserver
 %{_mandir}/man1/Xvnc.1*
 %{_mandir}/man1/vncserver.1*
 %{_mandir}/man1/x0vncserver.1*
