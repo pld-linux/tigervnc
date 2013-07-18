@@ -9,11 +9,9 @@
 
 # Use "-nolisten tcp" to prevent X connections to your VNC server via TCP.
 
-# Use "-nohttpd" to prevent web-based VNC clients connecting.
-
 # Use "-localhost" to prevent remote VNC clients connecting except when
 # doing so through a secure tunnel.  See the "-via" option in the
 # `man vncviewer' manual page.
 
 # VNCSERVERS="2:myusername"
-# VNCSERVERARGS[2]="-geometry 800x600 -nolisten tcp -nohttpd -localhost"
+# VNCSERVERARGS[2]="-geometry 800x600 -nolisten tcp -localhost"
