@@ -31,6 +31,7 @@ BuildRequires:	ImageMagick-coder-png
 BuildRequires:	ImageMagick-coder-svg
 BuildRequires:	Mesa-libGL-devel >= 7.8.1
 BuildRequires:	cpp
+BuildRequires:	fltk-devel
 BuildRequires:	gnutls-devel
 BuildRequires:	libjpeg-turbo-devel
 BuildRequires:	xorg-xserver-server-source >= %{xversion}
