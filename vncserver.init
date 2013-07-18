@@ -7,7 +7,6 @@
 # description:	Starts and stops vncserver.
 #		Used to provide remote X administration services.
 #
-# $Id$
 
 # Source function library
 . /etc/rc.d/init.d/functions
@@ -30,70 +29,70 @@ fi
 
 start() {
 	# Check if the service is already running?
-	if [ ! -f /var/lock/subsys/vncserver ]; then
-		ulimit -S -c 0 >/dev/null 2>&1
-		RETVAL=0
-
-		if [ ! -d /tmp/.X11-unix ]
-		then
-			mkdir -m 1777 /tmp/.X11-unix || :
-			restorecon /tmp/.X11-unix 2>/dev/null || :
-		fi
-
-		NOSERV=1
-		for display in $VNCSERVERS
-		do
-			msg_starting "vncserver ($display)"
-			NOSERV=0
-			DISP="${display%%:*}"
-			USER="${display##*:}"
-			if [ "x$USER" == "xroot" ]; then
-			    fail
-			    echo "-- Do not run vncserver as root!"
-			    continue
-			fi
-			VNCUSERARGS="${VNCSERVERARGS[${DISP}]}"
-			USEREXISTS=`cat /etc/passwd | awk -F: "{ if (\"$USER\"==\\\$1) print \"yes\" }"`
-			if [ "x$USEREXISTS" != "xyes" ]; then
-			    fail
-			    echo "-- User $USER does not exists!"
-			    continue
-			fi
-			USERHOME=`runuser $USER -c 'echo $HOME'`
-			if [ ! -f "$USERHOME/.vnc/passwd" ]; then
-			    fail
-			    echo "-- No password file found for user $USER!"
-			    continue
-			fi
-			export USER VNCUSERARGS
-			daemon --user ${USER} "vncserver :${DISP} ${VNCUSERARGS}"
-			RETVAL=$?
-			[ "$RETVAL" -eq 0 ] && echo $display >> /var/lock/subsys/vncserver && continue
-		done
-	else
+	if [ -f /var/lock/subsys/vncserver ]; then
 		msg_already_running vncserver
+		return
 	fi
+
+	ulimit -S -c 0 >/dev/null 2>&1
+	RETVAL=0
+
+	if [ ! -d /tmp/.X11-unix ]; then
+		mkdir -m 1777 /tmp/.X11-unix || :
+		restorecon /tmp/.X11-unix 2>/dev/null || :
+	fi
+
+	NOSERV=1
+	for display in $VNCSERVERS; do
+		msg_starting "vncserver ($display)"
+		NOSERV=0
+		DISP="${display%%:*}"
+		USER="${display##*:}"
+		if [ "x$USER" == "xroot" ]; then
+			fail
+			echo "-- Do not run vncserver as root!"
+			continue
+		fi
+		VNCUSERARGS="${VNCSERVERARGS[${DISP}]}"
+		USEREXISTS=`cat /etc/passwd | awk -F: "{ if (\"$USER\"==\\\$1) print \"yes\" }"`
+		if [ "x$USEREXISTS" != "xyes" ]; then
+			fail
+			echo "-- User $USER does not exists!"
+			continue
+		fi
+		USERHOME=`runuser $USER -c 'echo $HOME'`
+		if [ ! -f "$USERHOME/.vnc/passwd" ]; then
+			fail
+			echo "-- No password file found for user $USER!"
+			continue
+		fi
+		export USER VNCUSERARGS
+		daemon --user ${USER} "vncserver :${DISP} ${VNCUSERARGS}"
+		RETVAL=$?
+		[ "$RETVAL" -eq 0 ] && echo $display >> /var/lock/subsys/vncserver
+	done
 }
 
 stop() {
-	if [ -f /var/lock/subsys/vncserver ]; then
-		# Stop daemons.
-		ERRDISP=""
-		for display in `cat /var/lock/subsys/vncserver`
-		do
-			msg_stopping "vncserver ($display)"
-			export USER="${display##*:}"
-			runuser ${USER} -c "vncserver -kill :${display%%:*}" >/dev/null 2>&1
-			RETVAL=$?
-			[ "$RETVAL" -eq 0 ] && ok && continue
-			fail
-			ERRDISP="$ERRDISP $display"
-		done
-		rm -f /var/lock/subsys/vncserver
-		[ "x$ERRDISP" != "x" ] && echo "$ERRDISP" > /var/lock/subsys/vncserver
-	else
+	if [ ! -f /var/lock/subsys/vncserver ]; then
 		msg_not_running vncserver
+		return
 	fi
+
+	# Stop daemons.
+	ERRDISP=""
+	for display in `cat /var/lock/subsys/vncserver`
+	do
+		msg_stopping "vncserver ($display)"
+		export USER="${display##*:}"
+		runuser ${USER} -c "vncserver -kill :${display%%:*}" >/dev/null 2>&1
+		RETVAL=$?
+		[ "$RETVAL" -eq 0 ] && ok && continue
+		fail
+		ERRDISP="$ERRDISP $display"
+	done
+	rm -f /var/lock/subsys/vncserver
+	[ "x$ERRDISP" != "x" ] && echo "$ERRDISP" > /var/lock/subsys/vncserver
 }
 
 RETVAL=0
@@ -121,6 +120,3 @@ case "$1" in
 esac
 
 exit $RETVAL
-
-# This must be last line !
-# vi:syntax=sh
