@@ -1,0 +1,11 @@
+--- tigervnc-1.3.0/unix/xserver/hw/vnc/vncExtInit.cc.orig	2013-07-18 14:46:36.000000000 +0000
++++ tigervnc-1.3.0/unix/xserver/hw/vnc/vncExtInit.cc	2013-07-18 14:47:00.757116173 +0000
+@@ -1070,7 +1070,7 @@
+ {
+   REQUEST(xVncExtApproveConnectReq);
+   REQUEST_SIZE_MATCH(xVncExtApproveConnectReq);
+-  if (queryConnectId == (void*)stuff->opaqueId) {
++  if (queryConnectId == (void*)(intptr_t)stuff->opaqueId) {
+     for (int scr = 0; scr < screenInfo.numScreens; scr++) {
+       if (desktop[scr]) {
+         desktop[scr]->approveConnection(queryConnectId, stuff->approve,
