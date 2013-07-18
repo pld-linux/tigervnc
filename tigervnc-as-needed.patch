@@ -14,14 +14,3 @@
  
  noinst_LTLIBRARIES = libvnccommon.la
  
---- tigervnc-1.2.0/CMakeLists.txt~	2012-03-09 21:34:29.000000000 +0100
-+++ tigervnc-1.2.0/CMakeLists.txt	2012-03-23 13:47:57.895270032 +0100
-@@ -316,7 +316,7 @@
-   if(APPLE)
-     set(FLTK_LIBRARIES "-framework Carbon -framework Cocoa -framework ApplicationServices")
-   elseif(NOT WIN32)
--    set(FLTK_LIBRARIES "-ldl")
-+    set(FLTK_LIBRARIES "-ldl -lfontconfig")
-   endif()
-   message(STATUS "Using included FLTK library")
- endif()
