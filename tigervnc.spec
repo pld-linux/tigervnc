@@ -4,7 +4,7 @@ Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.3.0
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	http://download.sourceforge.net/tigervnc/%{name}-%{version}.tar.bz2
@@ -266,6 +266,8 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/vncserver
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/vncserver
 
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}
+
 %find_lang %{name}
 
 %clean
@@ -281,7 +283,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc doc/*
+%doc README.txt doc/*
 %attr(755,root,root) %{_bindir}/vncviewer
 %{_mandir}/man1/vncviewer.1*
 %{_desktopdir}/tigervnc.desktop
