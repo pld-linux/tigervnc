@@ -11,7 +11,7 @@
 
 # Use "-localhost" to prevent remote VNC clients connecting except when
 # doing so through a secure tunnel.  See the "-via" option in the
-# `man vncviewer' manual page.
+# 'man vncviewer' manual page.
 
 # VNCSERVERS="2:myusername"
 # VNCSERVERARGS[2]="-geometry 800x600 -nolisten tcp -localhost"
