@@ -119,6 +119,7 @@ gałęzi VNC 4 TightVNC.
 Summary:	VNC X server - TigerVNC version
 Summary(pl.UTF-8):	X serwer VNC - wersja TigerVNC
 Group:		X11/Applications/Networking
+Requires(post,preun):	/sbin/chkconfig
 Requires:	xorg-app-rgb
 # for vncpasswd tool
 Requires:	%{name}-utils = %{version}-%{release}
@@ -278,6 +279,16 @@ rm -rf $RPM_BUILD_ROOT
 %postun
 [ ! -x /usr/bin/update-desktop-database ] || %update_desktop_database_postun
 %update_icon_cache hicolor
+
+%post server
+/sbin/chkconfig --add vncserver
+%service vncserver restart "VNC server"
+
+%preun server
+if [ "$1" = "0" ]; then
+	%service vncserver stop
+	/sbin/chkconfig --del vncserver
+fi
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
