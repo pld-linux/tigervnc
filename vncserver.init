@@ -106,7 +106,7 @@ case "$1" in
 	;;
   restart)
 	stop
-	sleep 3s
+	sleep 5
 	start
 	exit $?
 	;;
