@@ -13,5 +13,11 @@
 # doing so through a secure tunnel.  See the "-via" option in the
 # 'man vncviewer' manual page.
 
+# On systems running systemd after updating the list below you have to
+# restart systemd to regenerate vncserver@DISPLAY.service services
+# (systemctl --system daemon-reload), stop and start vncserver.target when
+# removing elements from list or restart vncserver.target when only adding
+# elements (systemctl stop vncserver.target / systemctl restart vncserver.target).
+
 # VNCSERVERS="2:myusername"
 # VNCSERVERARGS[2]="-geometry 800x600 -nolisten tcp -localhost"

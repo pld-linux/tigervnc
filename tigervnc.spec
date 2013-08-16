@@ -4,7 +4,7 @@ Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.3.0
-Release:	4
+Release:	5
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	http://download.sourceforge.net/tigervnc/%{name}-%{version}.tar.bz2
@@ -12,6 +12,8 @@ Source0:	http://download.sourceforge.net/tigervnc/%{name}-%{version}.tar.bz2
 Source1:	%{name}.desktop
 Source2:	vncserver.init
 Source3:	vncserver.sysconfig
+Source4:	vncserver.target
+Source5:	vncserver-service-generator
 Patch0:		%{name}-cookie.patch
 Patch1:		%{name}-ldnow.patch
 Patch2:		%{name}-rh102434.patch
@@ -48,6 +50,7 @@ BuildRequires:	pam-devel
 BuildRequires:	perl-base
 BuildRequires:	pixman-devel >= 0.16.0
 BuildRequires:	pkgconfig >= 1:0.19
+BuildRequires:	rpmbuild(macros) >= 1.647
 BuildRequires:	xorg-app-mkfontscale
 BuildRequires:	xorg-font-font-util >= 1.1
 BuildRequires:	xorg-lib-libX11-devel
@@ -122,12 +125,14 @@ Summary:	VNC X server - TigerVNC version
 Summary(pl.UTF-8):	X serwer VNC - wersja TigerVNC
 Group:		X11/Applications/Networking
 Requires(post,preun):	/sbin/chkconfig
+Requires(post,preun,postun):	systemd-units >= 38
 Requires:	xorg-app-rgb
 # for vncpasswd tool
 Requires:	%{name}-utils = %{version}-%{release}
 # for mcookie
 Requires:	util-linux
 Requires:	libjpeg-turbo
+Requires:	systemd-units >= 38
 Requires:	xkeyboard-config
 Requires:	xorg-app-xauth
 Requires:	xorg-app-xkbcomp
@@ -271,6 +276,11 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/vncserver
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/vncserver
 
+install -d $RPM_BUILD_ROOT{%{systemdunitdir},/lib/systemd/system-generators}
+install -p %{SOURCE4} $RPM_BUILD_ROOT%{systemdunitdir}/vncserver.target
+install -p %{SOURCE5} $RPM_BUILD_ROOT/lib/systemd/system-generators/vncserver-service-generator
+ln -s /dev/null $RPM_BUILD_ROOT%{systemdunitdir}/vncserver.service
+
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}
 
 %find_lang %{name}
@@ -289,11 +299,25 @@ rm -rf $RPM_BUILD_ROOT
 %post server
 /sbin/chkconfig --add vncserver
 %service vncserver restart "VNC server"
+NORESTART=1
+%systemd_post vncserver.target
 
 %preun server
 if [ "$1" = "0" ]; then
 	%service vncserver stop
 	/sbin/chkconfig --del vncserver
+fi
+%systemd_preun vncserver.target
+
+%postun server
+%systemd_reload
+
+%triggerpostun server -- tigervnc-server < 1.3.0-5
+[ -f /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm
+[ ${RPM_ENABLE_SYSTEMD_SERVICE:-yes} = no ] && return 1
+export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog
+if [ "$(echo /etc/rc.d/rc[0-6].d/S[0-9][0-9]vncserver)" != "/etc/rc.d/rc[0-6].d/S[0-9][0-9]vncserver" ]; then
+	/bin/systemctl --quiet enable vncserver.target || :
 fi
 
 %files -f %{name}.lang
@@ -311,6 +335,9 @@ fi
 %attr(755,root,root) %{_bindir}/x0vncserver
 %attr(754,root,root) /etc/rc.d/init.d/vncserver
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vncserver
+%attr(755,root,root) /lib/systemd/system-generators/vncserver-service-generator
+%{systemdunitdir}/vncserver.target
+%{systemdunitdir}/vncserver.service
 %{_mandir}/man1/Xvnc.1*
 %{_mandir}/man1/vncserver.1*
 %{_mandir}/man1/x0vncserver.1*

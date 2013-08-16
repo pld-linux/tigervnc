@@ -1,0 +1,49 @@
+#!/bin/sh
+
+destunitdir=${1:-/tmp}
+
+# Do nothing if vncserver target is disabled
+[ -e /etc/systemd/system/multi-user.target.wants/vncserver.target ] || exit 0
+
+VNCSERVERS=""
+[ -f /etc/sysconfig/vncserver ] && . /etc/sysconfig/vncserver
+
+if [ -d $destunitdir/vncserver.target.wants ]; then
+	rm -f $destunitdir/vncserver.target.wants/vncserver@*.service
+else
+	mkdir -p $destunitdir/vncserver.target.wants
+fi
+
+for display in $VNCSERVERS; do
+	DISP="${display%%:*}"
+	USER="${display##*:}"
+	if [ "x$USER" == "xroot" ]; then
+		echo "-- Do not run vncserver as root!"
+		continue
+	fi
+	VNCUSERARGS="${VNCSERVERARGS[${DISP}]}"
+	if [ ! id $USER >/dev/null 2>&1 ]; then
+		echo "-- User $USER does not exists!"
+		continue
+	fi
+	USERHOME=$(eval "echo ~$USER")
+	if [ ! -f "$USERHOME/.vnc/passwd" ]; then
+		echo "-- No password file found for user $USER!"
+		continue
+	fi
+	cat >$destunitdir/vncserver.target.wants/vncserver@$DISP.service <<EOF
+[Unit]
+Description=Remote desktop service (VNC) on display %i
+Requires=vncserver.target
+After=vncserver.target
+PropagateReloadFrom=vncserver.target
+
+[Service]
+Type=simple
+ExecStart=/sbin/runuser -l $USER -c "/usr/bin/vncserver -fg :%i $VNCUSERARGS"
+ExecStop=/sbin/runuser -l $USER -c "/usr/bin/vncserver -kill :%i"
+
+[Install]
+WantedBy=vncserver.target
+EOF
+done
