@@ -77,9 +77,11 @@ BuildRequires:	xorg-lib-libfontenc-devel
 BuildRequires:	xorg-lib-libpciaccess-devel >= 0.13
 BuildRequires:	xorg-lib-libxkbfile-devel
 BuildRequires:	xorg-lib-libxkbui-devel >= 1.0.2
+BuildRequires:	xorg-lib-libxshmfence-devel >= 1.1
 BuildRequires:	xorg-lib-xtrans-devel >= 1.2.2
 BuildRequires:	xorg-proto-bigreqsproto-devel >= 1.1.0
 BuildRequires:	xorg-proto-damageproto-devel >= 1.1
+BuildRequires:	xorg-proto-dri3proto-devel >= 1.0
 BuildRequires:	xorg-proto-fixesproto-devel >= 4.1
 BuildRequires:	xorg-proto-fontcacheproto-devel
 BuildRequires:	xorg-proto-fontsproto-devel
@@ -233,10 +235,12 @@ export CXXFLAGS="%{rpmcxxflags} -fpermissive"
 	--disable-xfbdev \
 	--disable-dri \
 	--enable-dri2 \
+	--enable-dri3 \
 	--with-pic \
 	--disable-static \
 	--disable-xinerama \
 	--disable-composite \
+	--disable-wayland \
 	--enable-glx \
 	--enable-glx-tls \
 	--enable-aiglx \
