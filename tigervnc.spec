@@ -4,7 +4,7 @@ Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.3.0
-Release:	8
+Release:	9
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	http://download.sourceforge.net/tigervnc/%{name}-%{version}.tar.bz2
@@ -16,7 +16,6 @@ Source4:	vncserver.target
 Source5:	vncserver-service-generator
 Patch0:		%{name}-cookie.patch
 Patch1:		%{name}-ldnow.patch
-Patch2:		%{name}-rh102434.patch
 Patch3:		%{name}-as-needed.patch
 Patch4:		%{name}-ipv6.patch
 Patch5:		%{name}-rh692048.patch
@@ -25,7 +24,10 @@ Patch7:		format-security.patch
 Patch8:		%{name}-typecast.patch
 Patch9:		tigervnc-xstartup.patch
 Patch10:	xserver.patch
-Patch11:	tigervnc-key_is_down.patch
+Patch11:	tigervnc-getmaster.patch
+Patch12:	tigervnc-setcursor-crash.patch
+Patch13:	tigervnc-xserver-1.15.patch
+Patch14:	tigervnc-zrle-crash.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -84,6 +86,7 @@ BuildRequires:	xorg-proto-fontsproto-devel
 BuildRequires:	xorg-proto-glproto-devel >= 1.4.10
 BuildRequires:	xorg-proto-inputproto-devel >= 1.9.99.902
 BuildRequires:	xorg-proto-kbproto-devel >= 1.0.3
+BuildRequires:	xorg-proto-presentproto-devel >= 1.0
 BuildRequires:	xorg-proto-printproto-devel
 BuildRequires:	xorg-proto-randrproto-devel >= 1.3
 BuildRequires:	xorg-proto-recordproto-devel
@@ -182,7 +185,6 @@ pozwalający na zdalny dostęp do pulpitu.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 %patch3 -p1
 %patch4 -p0
 %patch5 -p1
@@ -191,12 +193,15 @@ pozwalający na zdalny dostęp do pulpitu.
 %patch8 -p1
 %patch9 -p1
 %patch11 -p1
+%patch12 -p1
+%patch14 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 
+%patch13 -p1
+
 cd unix/xserver
-patch -p1 <%{PATCH10}
-cd -
+%patch10 -p1
 
 %build
 %cmake .
