@@ -1,4 +1,4 @@
-%define		xversion	1.14.0
+%define		xversion	1.16.0
 
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
