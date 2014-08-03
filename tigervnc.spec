@@ -28,6 +28,9 @@ Patch11:	tigervnc-getmaster.patch
 Patch12:	tigervnc-setcursor-crash.patch
 Patch13:	tigervnc-xserver-1.15.patch
 Patch14:	tigervnc-zrle-crash.patch
+Patch15:	tigervnc-xserver-1.16.patch
+Patch16:	tigervnc-inputreset.patch
+Patch17:	tigervnc-pointersync.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -197,6 +200,9 @@ pozwalający na zdalny dostęp do pulpitu.
 %patch11 -p1
 %patch12 -p1
 %patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 
@@ -241,6 +247,7 @@ export CXXFLAGS="%{rpmcxxflags} -fpermissive"
 	--disable-xinerama \
 	--disable-composite \
 	--disable-wayland \
+	--disable-xwayland \
 	--enable-glx \
 	--enable-glx-tls \
 	--enable-aiglx \
