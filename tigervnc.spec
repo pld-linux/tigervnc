@@ -199,15 +199,13 @@ pozwalający na zdalny dostęp do pulpitu.
 %patch9 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
-
-%patch13 -p1
-
 cd unix/xserver
 %patch10 -p1
 
