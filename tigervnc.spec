@@ -199,7 +199,7 @@ cd unix/xserver
 
 %build
 %cmake .
-%{__make}
+%{__make} -j1
 
 cd unix/xserver
 %{__aclocal} -I m4
@@ -246,11 +246,11 @@ export CXXFLAGS="%{rpmcxxflags} -fpermissive"
 	--with-xkb-output=/var/lib/xkb \
 	--disable-unit-tests
 
-%{__make}
+%{__make} -j1
 cd -
 
 cd media
-%{__make}
+%{__make} -j1
 
 %install
 rm -rf $RPM_BUILD_ROOT
