@@ -1,7 +1,0 @@
-[Unit]
-Description=Start VNC server daemons
-After=network.target
-Wants=network.target
-
-[Install]
-WantedBy=multi-user.target
