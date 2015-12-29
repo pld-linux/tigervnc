@@ -3,28 +3,24 @@
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
-Version:	1.4.3
-Release:	5
+Version:	1.6.0
+Release:	1
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}.tar.gz?/%{name}-%{version}.tar.gz
-# Source0-md5:	2177ee42fa1a3902b6feeaa7747f1c2a
+# Source0-md5:	78b736445781d86c48e942465a391ccc
 Source1:	%{name}.desktop
 Source2:	vncserver.init
 Source3:	vncserver.sysconfig
 Source4:	vncserver.target
 Source5:	vncserver-service-generator
 Patch0:		%{name}-cookie.patch
-Patch1:		%{name}-ldnow.patch
 Patch3:		%{name}-as-needed.patch
-Patch4:		%{name}-ipv6.patch
 Patch5:		%{name}-rh692048.patch
-Patch6:		no-bashizm.patch
-Patch7:		format-security.patch
 Patch8:		tigervnc-xstartup.patch
 Patch9:		xserver.patch
 Patch10:	tigervnc-getmaster.patch
-Patch11:	tigervnc-xserver-1.17.patch
+Patch11:	tigervnc-xserver-1.18.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -183,19 +179,15 @@ pozwalający na zdalny dostęp do pulpitu.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 %patch3 -p1
-%patch4 -p0
 %patch5 -p1
-%patch6 -p1
-%patch7 -p1
 %patch8 -p1
 %patch10 -p1
-%patch11 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 cd unix/xserver
 %patch9 -p1
+%patch11 -p3
 
 %build
 %cmake .
