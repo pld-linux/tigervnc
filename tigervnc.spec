@@ -3,24 +3,23 @@
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
-Version:	1.6.0
-Release:	6
+Version:	1.7.0
+Release:	1
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}.tar.gz?/%{name}-%{version}.tar.gz
-# Source0-md5:	78b736445781d86c48e942465a391ccc
+# Source0-md5:	0930edf4f339283d856ce7027db40308
 Source1:	%{name}.desktop
 Source2:	vncserver.init
 Source3:	vncserver.sysconfig
 Source4:	vncserver.target
 Source5:	vncserver-service-generator
-Patch0:		%{name}-cookie.patch
-Patch3:		%{name}-as-needed.patch
-Patch5:		%{name}-rh692048.patch
-Patch8:		tigervnc-xstartup.patch
-Patch9:		xserver.patch
-Patch10:	tigervnc-getmaster.patch
-Patch11:	tigervnc-xserver-1.18.patch
+Patch0:		%{name}-xserver.patch
+Patch1:		%{name}-libvnc-os.patch
+Patch2:		%{name}-getmaster.patch
+Patch3:		%{name}-utilize-system-crypto-policies.patch
+Patch4:		%{name}-xstartup.patch
+Patch100:	xserver.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
@@ -113,10 +112,10 @@ performance and remote display functionality. Originally this software
 was based on the (never released) VNC 4 branch of TightVNC.
 
 %description -l pl.UTF-8
-TigerVNC to zestaw serwerów i klientów VNC, które koncentrują się
-na wydajności i funkcjonalności zdalnego wyświetlania. Pierwotnie
-oprogramowanie oparte było na (nigdy nie wydanej)
-gałęzi VNC 4 TightVNC.
+TigerVNC to zestaw serwerów i klientów VNC, które koncentrują się na
+wydajności i funkcjonalności zdalnego wyświetlania. Pierwotnie
+oprogramowanie oparte było na (nigdy nie wydanej) gałęzi VNC 4
+TightVNC.
 
 %package server
 Summary:	VNC X server - TigerVNC version
@@ -128,9 +127,9 @@ Requires:	xorg-app-rgb
 # for vncpasswd tool
 Requires:	%{name}-utils = %{version}-%{release}
 # for mcookie
-Requires:	util-linux
 Requires:	libjpeg-turbo
 Requires:	systemd-units >= 38
+Requires:	util-linux
 Requires:	xkeyboard-config
 Requires:	xorg-app-xauth
 Requires:	xorg-app-xkbcomp
@@ -157,37 +156,36 @@ vncpasswd generates password file (both on server and viewer side).
 %description utils -l pl.UTF-8
 Ten pakiet zawiera dodatkowe narzędzia do tightvnc: vncconfig i
 vncpasswd. vncconfig służy do konfigurowania i kontroli działającej
-instancji Xvnc lub innego serwera X z rozszerzeniem VNC.
-vncpasswd służy to tworzenia pliku z hasłem (zarówno po
-stronie serwera, jak i przeglądarki).
+instancji Xvnc lub innego serwera X z rozszerzeniem VNC. vncpasswd
+służy to tworzenia pliku z hasłem (zarówno po stronie serwera, jak i
+przeglądarki).
 
 %package -n xorg-xserver-libvnc
 Summary:	TigerVNC module for X.org server
 Summary(pl.UTF-8):	Moduł TigerVNC dla servera X.org
 Group:		X11/Servers
-%requires_eq_to	xorg-xserver-server xorg-xserver-server-source
+%requires_eq_to xorg-xserver-server xorg-xserver-server-source
 Provides:	xorg-xserver-module(vnc)
 
 %description -n xorg-xserver-libvnc
-This package contains libvnc.so module for X.org server,
-allowing others to access the desktop on your machine.
+This package contains libvnc.so module for X.org server, allowing
+others to access the desktop on your machine.
 
 %description -n xorg-xserver-libvnc -l pl.UTF-8
-Ten pakiet zawiera moduł libvnc.so dla serwera X.org,
-pozwalający na zdalny dostęp do pulpitu.
+Ten pakiet zawiera moduł libvnc.so dla serwera X.org, pozwalający na
+zdalny dostęp do pulpitu.
 
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 %patch3 -p1
-%patch5 -p1
-%patch8 -p1
-%patch10 -p1
+%patch4 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 cd unix/xserver
-%patch9 -p1
-%patch11 -p3
+%patch100 -p1
 
 %build
 %cmake .
@@ -257,22 +255,22 @@ cd unix/xserver/hw/vnc
 	DESTDIR=$RPM_BUILD_ROOT
 cd -
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
 
-install media/icons/tigervnc_16.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/16x16/apps/tigervnc.png
-install media/icons/tigervnc_22.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/22x22/apps/tigervnc.png
-install media/icons/tigervnc_24.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/24x24/apps/tigervnc.png
-install media/icons/tigervnc_32.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/32x32/apps/tigervnc.png
-install media/icons/tigervnc_48.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/48x48/apps/tigervnc.png
-install media/icons/tigervnc.svg $RPM_BUILD_ROOT%{_iconsdir}/hicolor/scalable/apps/tigervnc.svg
+cp -p media/icons/tigervnc_16.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/16x16/apps/tigervnc.png
+cp -p media/icons/tigervnc_22.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/22x22/apps/tigervnc.png
+cp -p media/icons/tigervnc_24.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/24x24/apps/tigervnc.png
+cp -p media/icons/tigervnc_32.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/32x32/apps/tigervnc.png
+cp -p media/icons/tigervnc_48.png $RPM_BUILD_ROOT%{_iconsdir}/hicolor/48x48/apps/tigervnc.png
+cp -p media/icons/tigervnc.svg $RPM_BUILD_ROOT%{_iconsdir}/hicolor/scalable/apps/tigervnc.svg
 
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/vncserver
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/vncserver
+cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/vncserver
+cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/vncserver
 
-install -d $RPM_BUILD_ROOT{%{systemdunitdir},/lib/systemd/system-generators}
+install -d $RPM_BUILD_ROOT{%{systemdunitdir},%{systemdunitdir}-generators}
 install -p %{SOURCE4} $RPM_BUILD_ROOT%{systemdunitdir}/vncserver.target
-install -p %{SOURCE5} $RPM_BUILD_ROOT/lib/systemd/system-generators/vncserver-service-generator
+install -p %{SOURCE5} $RPM_BUILD_ROOT%{systemdunitdir}-generators/vncserver-service-generator
 ln -s /dev/null $RPM_BUILD_ROOT%{systemdunitdir}/vncserver.service
 
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}
@@ -283,11 +281,11 @@ ln -s /dev/null $RPM_BUILD_ROOT%{systemdunitdir}/vncserver.service
 rm -rf $RPM_BUILD_ROOT
 
 %post
-[ ! -x /usr/bin/update-desktop-database ] || %update_desktop_database_post
+[ ! -x %{_bindir}/update-desktop-database ] || %update_desktop_database_post
 %update_icon_cache hicolor
 
 %postun
-[ ! -x /usr/bin/update-desktop-database ] || %update_desktop_database_postun
+[ ! -x %{_bindir}/update-desktop-database ] || %update_desktop_database_postun
 %update_icon_cache hicolor
 
 %post server
@@ -329,7 +327,7 @@ fi
 %attr(755,root,root) %{_bindir}/x0vncserver
 %attr(754,root,root) /etc/rc.d/init.d/vncserver
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vncserver
-%attr(755,root,root) /lib/systemd/system-generators/vncserver-service-generator
+%attr(755,root,root) %{systemdunitdir}-generators/vncserver-service-generator
 %{systemdunitdir}/vncserver.target
 %{systemdunitdir}/vncserver.service
 %{_mandir}/man1/Xvnc.1*
