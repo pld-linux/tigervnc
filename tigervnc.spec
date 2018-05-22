@@ -4,7 +4,7 @@ Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.8.0
-Release:	2
+Release:	3
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}.tar.gz?/%{name}-%{version}.tar.gz
@@ -17,6 +17,7 @@ Source5:	vncserver-service-generator
 Patch2:		%{name}-getmaster.patch
 Patch3:		%{name}-utilize-system-crypto-policies.patch
 Patch4:		%{name}-xstartup.patch
+Patch5:		tigervnc-support-xorg120.patch
 Patch100:	xserver.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
@@ -178,6 +179,7 @@ zdalny dostęp do pulpitu.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 cd unix/xserver
@@ -208,7 +210,7 @@ cd unix/xserver
 	--disable-kdrive \
 	--disable-dri \
 	--enable-dri2 \
-	--enable-dri3 \
+	--disable-dri3 \
 	--with-pic \
 	--disable-static \
 	--disable-wayland \
