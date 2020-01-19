@@ -17,9 +17,8 @@ Source5:	vncserver-service-generator
 Patch0:		%{name}-manpages.patch
 Patch1:		%{name}-passwd-crash-with-malloc-checks.patch
 Patch2:		%{name}-getmaster.patch
-Patch3:		%{name}-utilize-system-crypto-policies.patch
-Patch4:		%{name}-xstartup.patch
-Patch5:		%{name}-shebang.patch
+Patch3:		%{name}-xstartup.patch
+Patch4:		%{name}-shebang.patch
 Patch100:	xserver.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
@@ -183,7 +182,6 @@ zdalny dostęp do pulpitu.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 cd unix/xserver
