@@ -3,21 +3,23 @@
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
-Version:	1.8.0
-Release:	9
+Version:	1.10.1
+Release:	1
 License:	GPL v2
 Group:		X11/Applications/Networking
-Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}.tar.gz?/%{name}-%{version}.tar.gz
-# Source0-md5:	5c9a80dd4b99b4eb19f535db5ce5830f
+Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	0c38334c7a52d304c30fac7802125a49
 Source1:	%{name}.desktop
 Source2:	vncserver.init
 Source3:	vncserver.sysconfig
 Source4:	vncserver.target
 Source5:	vncserver-service-generator
+Patch0:		%{name}-manpages.patch
+Patch1:		%{name}-passwd-crash-with-malloc-checks.patch
 Patch2:		%{name}-getmaster.patch
 Patch3:		%{name}-utilize-system-crypto-policies.patch
 Patch4:		%{name}-xstartup.patch
-Patch5:		tigervnc-support-xorg120.patch
+Patch5:		%{name}-shebang.patch
 Patch100:	xserver.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
@@ -176,6 +178,8 @@ zdalny dostęp do pulpitu.
 
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -187,7 +191,7 @@ cd unix/xserver
 
 %build
 %cmake .
-%{__make} -j1
+%{__make}
 
 cd unix/xserver
 %{__aclocal} -I m4
@@ -219,11 +223,11 @@ cd unix/xserver
 	--with-xkb-output=/var/lib/xkb \
 	--disable-unit-tests
 
-%{__make} -j1
+%{__make}
 cd -
 
 cd media
-%{__make} -j1
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -297,7 +301,7 @@ fi
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc README.txt doc/*
+%doc README.rst doc/*
 %attr(755,root,root) %{_bindir}/vncviewer
 %{_mandir}/man1/vncviewer.1*
 %{_desktopdir}/tigervnc.desktop
