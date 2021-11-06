@@ -1,24 +1,21 @@
-%define		xversion	1.16.0
+%define		xversion	1.21.0
 
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
-Version:	1.10.1
-Release:	8
+Version:	1.11.0
+Release:	1
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	0c38334c7a52d304c30fac7802125a49
+# Source0-md5:	07f5e217f288c515effb083896e65054
 Source1:	%{name}.desktop
 Source2:	vncserver.init
 Source3:	vncserver.sysconfig
-Source4:	vncserver.target
-Source5:	vncserver-service-generator
-Patch0:		%{name}-manpages.patch
 Patch1:		%{name}-passwd-crash-with-malloc-checks.patch
 Patch2:		%{name}-getmaster.patch
-Patch3:		%{name}-xstartup.patch
 Patch4:		%{name}-shebang.patch
+Patch5:		xserver-1.21.patch
 Patch100:	xserver.patch
 URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
@@ -177,18 +174,18 @@ zdalny dostęp do pulpitu.
 
 %prep
 %setup -q
-%patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 %patch4 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
+%patch5 -p1
 cd unix/xserver
 %patch100 -p1
 
 %build
-%cmake .
+%cmake . \
+	-DCMAKE_INSTALL_UNITDIR=%{systemdunitdir}
 %{__make}
 
 cd unix/xserver
@@ -253,10 +250,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/vncserver
 cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/vncserver
 
-install -d $RPM_BUILD_ROOT{%{systemdunitdir},%{systemdunitdir}-generators}
-install -p %{SOURCE4} $RPM_BUILD_ROOT%{systemdunitdir}/vncserver.target
-install -p %{SOURCE5} $RPM_BUILD_ROOT%{systemdunitdir}-generators/vncserver-service-generator
-ln -s /dev/null $RPM_BUILD_ROOT%{systemdunitdir}/vncserver.service
+ln -sr $RPM_BUILD_ROOT{%{_libexecdir},%{_bindir}}/vncserver
 
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}
 
@@ -311,14 +305,21 @@ fi
 %attr(755,root,root) %{_bindir}/Xvnc
 %attr(755,root,root) %{_bindir}/vncserver
 %attr(755,root,root) %{_bindir}/x0vncserver
+%attr(755,root,root) %{_sbindir}/vncsession
+%attr(755,root,root) %{_libexecdir}/vncserver
+%attr(755,root,root) %{_libexecdir}/vncsession-start
 %attr(754,root,root) /etc/rc.d/init.d/vncserver
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vncserver
-%attr(755,root,root) %{systemdunitdir}-generators/vncserver-service-generator
-%{systemdunitdir}/vncserver.target
-%{systemdunitdir}/vncserver.service
+%dir %{_sysconfdir}/tigervnc
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/tigervnc/vncserver-config-defaults
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/tigervnc/vncserver-config-mandatory
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/tigervnc/vncserver.users
+%config(noreplace) %verify(not md5 mtime size) /etc/pam.d/tigervnc
+%{systemdunitdir}/vncserver@.service
 %{_mandir}/man1/Xvnc.1*
-%{_mandir}/man1/vncserver.1*
 %{_mandir}/man1/x0vncserver.1*
+%{_mandir}/man8/vncserver.8*
+%{_mandir}/man8/vncsession.8*
 
 %files utils
 %defattr(644,root,root,755)

@@ -27,8 +27,8 @@ diff -up xserver/configure.ac.xserver116-rebased xserver/configure.ac
 +AC_DEFINE_UNQUOTED(XORG_VERSION_CURRENT, [$VENDOR_RELEASE], [Current Xorg version])
 +
  if test "x$XORG" = xyes; then
- 	XORG_DDXINCS='-I$(top_srcdir)/hw/xfree86 -I$(top_srcdir)/hw/xfree86/include -I$(top_srcdir)/hw/xfree86/common'
- 	XORG_OSINCS='-I$(top_srcdir)/hw/xfree86/os-support -I$(top_srcdir)/hw/xfree86/os-support/bus -I$(top_srcdir)/os'
+ 	PKG_CHECK_MODULES([LIBXCVT], $LIBXCVT)
+ 
 @@ -2116,7 +2123,6 @@ if test "x$XORG" = xyes; then
  	AC_DEFINE(XORG_SERVER, 1, [Building Xorg server])
  	AC_DEFINE(XORGSERVER, 1, [Building Xorg server])
@@ -38,7 +38,7 @@ diff -up xserver/configure.ac.xserver116-rebased xserver/configure.ac
  	AC_DEFINE(NEED_XF86_PROTOTYPES, 1, [Need XFree86 helper functions])
  	AC_DEFINE(__XSERVERNAME__, "Xorg", [Name of X server])
 @@ -2691,6 +2697,7 @@ hw/dmx/Makefile
- hw/dmx/man/Makefile
+ hw/xfree86/utils/gtf/Makefile
  hw/vfb/Makefile
  hw/vfb/man/Makefile
 +hw/vnc/Makefile
@@ -49,21 +49,21 @@ diff -up xserver/hw/Makefile.am.xserver116-rebased xserver/hw/Makefile.am
 --- xserver/hw/Makefile.am.xserver116-rebased	2016-09-29 13:14:45.601441659 +0200
 +++ xserver/hw/Makefile.am	2016-09-29 13:14:45.631442006 +0200
 @@ -38,7 +38,8 @@ SUBDIRS =			\
- 	$(DMX_SUBDIRS)		\
+ 	$(XVFB_SUBDIRS)		\
+ 	$(XNEST_SUBDIRS)	\
  	$(KDRIVE_SUBDIRS)	\
- 	$(XQUARTZ_SUBDIRS)	\
--	$(XWAYLAND_SUBDIRS)
-+	$(XWAYLAND_SUBDIRS)	\
+-	$(XQUARTZ_SUBDIRS)
++	$(XQUARTZ_SUBDIRS)	\
 +	vnc
  
- DIST_SUBDIRS = dmx xfree86 vfb xnest xwin xquartz kdrive xwayland
+ DIST_SUBDIRS = xfree86 vfb xnest xwin xquartz kdrive
  
 diff -up xserver/mi/miinitext.c.xserver116-rebased xserver/mi/miinitext.c
 --- xserver/mi/miinitext.c.xserver116-rebased	2016-09-29 13:14:45.618441855 +0200
 +++ xserver/mi/miinitext.c	2016-09-29 13:14:45.631442006 +0200
 @@ -114,8 +114,15 @@ SOFTWARE.
- #include "os.h"
- #include "globals.h"
+ 
+ #include "miinitext.h"
  
 +#ifdef TIGERVNC
 +extern void vncExtensionInit(INITARGS);
@@ -88,18 +88,3 @@ diff -up xserver/mi/miinitext.c.xserver116-rebased xserver/mi/miinitext.c
  extern _X_EXPORT void
  LogVWrite(int verb, const char *f, va_list args)
  _X_ATTRIBUTE_PRINTF(2, 0);
---- xserver/hw/vnc/xvnc.c~	2019-12-20 08:02:02.000000000 +0100
-+++ xserver/hw/vnc/xvnc.c	2020-01-19 15:32:59.189145946 +0100
-@@ -1855,3 +1855,12 @@
-     GiveUp(0);
-   }
- }
-+
-+#if INPUTTHREAD
-+/** This function is called in Xserver/os/inputthread.c when starting
-+    the input thread. */
-+void
-+ddxInputThreadInit(void)
-+{
-+}
-+#endif
