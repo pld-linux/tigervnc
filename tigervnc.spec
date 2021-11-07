@@ -4,7 +4,7 @@ Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
 Version:	1.11.0
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		X11/Applications/Networking
 Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}/%{name}-%{version}.tar.gz
@@ -270,26 +270,15 @@ rm -rf $RPM_BUILD_ROOT
 %post server
 /sbin/chkconfig --add vncserver
 %service vncserver restart "VNC server"
-NORESTART=1
-%systemd_post vncserver.target
 
 %preun server
 if [ "$1" = "0" ]; then
 	%service vncserver stop
 	/sbin/chkconfig --del vncserver
 fi
-%systemd_preun vncserver.target
 
 %postun server
 %systemd_reload
-
-%triggerpostun server -- tigervnc-server < 1.3.0-5
-[ -f /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm
-[ ${RPM_ENABLE_SYSTEMD_SERVICE:-yes} = no ] && return 1
-export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog
-if [ "$(echo /etc/rc.d/rc[0-6].d/S[0-9][0-9]vncserver)" != "/etc/rc.d/rc[0-6].d/S[0-9][0-9]vncserver" ]; then
-	/bin/systemctl --quiet enable vncserver.target || :
-fi
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
