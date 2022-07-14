@@ -3,17 +3,16 @@
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
-Version:	1.11.0
-Release:	5
+Version:	1.12.0
+Release:	1
 License:	GPL v2
 Group:		X11/Applications/Networking
+#Source0Download: https://github.com/TigerVNC/tigervnc/releases
 Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	07f5e217f288c515effb083896e65054
+# Source0-md5:	e92945f43654e2a120f2c9d8b3a9b869
 Source1:	%{name}.desktop
 Source2:	vncserver.init
 Source3:	vncserver.sysconfig
-Patch1:		%{name}-passwd-crash-with-malloc-checks.patch
-Patch2:		%{name}-getmaster.patch
 Patch4:		%{name}-shebang.patch
 Patch5:		xserver-1.21.patch
 Patch100:	xserver.patch
@@ -23,7 +22,9 @@ BuildRequires:	ImageMagick-coder-png
 BuildRequires:	ImageMagick-coder-svg
 BuildRequires:	Mesa-libGL-devel >= 7.8.1
 BuildRequires:	cpp
+BuildRequires:	cmake >= 3.4.0
 BuildRequires:	fltk-devel
+BuildRequires:	gettext-tools
 BuildRequires:	gnutls-devel
 BuildRequires:	libjpeg-turbo-devel
 BuildRequires:	xorg-xserver-server-source >= %{xversion}
@@ -174,8 +175,6 @@ zdalny dostęp do pulpitu.
 
 %prep
 %setup -q
-%patch1 -p1
-%patch2 -p1
 %patch4 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
@@ -221,8 +220,7 @@ cd unix/xserver
 %{__make}
 cd -
 
-cd media
-%{__make}
+%{__make} -C media
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -232,10 +230,10 @@ install -d $RPM_BUILD_ROOT%{_iconsdir}/hicolor/{16x16,22x22,24x24,32x32,48x48,sc
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-cd unix/xserver/hw/vnc
-%{__make} install \
+%{__make} -C unix/xserver/hw/vnc install \
 	DESTDIR=$RPM_BUILD_ROOT
-cd -
+
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libvnc.la
 
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
 
