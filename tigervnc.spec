@@ -192,8 +192,6 @@ cd unix/xserver
 %{__autoconf}
 %{__automake}
 %configure \
-	--with-os-name="PLD/Linux" \
-	--with-os-vendor="PLD/Team" \
 	--disable-config-hal \
 	--disable-config-udev \
 	--without-dtrace \
@@ -202,7 +200,6 @@ cd unix/xserver
 	--disable-xorg \
 	--disable-xnest \
 	--disable-xvfb \
-	--disable-dmx \
 	--disable-xwin \
 	--disable-xephyr \
 	--disable-kdrive \
@@ -211,9 +208,7 @@ cd unix/xserver
 	--disable-dri3 \
 	--with-pic \
 	--disable-static \
-	--disable-wayland \
 	--enable-glx \
-	--enable-install-libxf86config \
 	--with-xkb-output=/var/lib/xkb \
 	--disable-unit-tests
 
