@@ -20,6 +20,7 @@ URL:		http://www.tigervnc.com/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
 BuildRequires:	ImageMagick-coder-svg
+BuildRequires:	Mesa-dri-devel >= 7.8.1
 BuildRequires:	Mesa-libGL-devel >= 7.8.1
 BuildRequires:	cpp
 BuildRequires:	cmake >= 3.4.0
@@ -51,7 +52,7 @@ BuildRequires:	xorg-lib-libXaw-devel
 BuildRequires:	xorg-lib-libXdamage-devel
 BuildRequires:	xorg-lib-libXdmcp-devel
 BuildRequires:	xorg-lib-libXext-devel >= 1.0.99.4
-BuildRequires:	xorg-lib-libXfont-devel >= 1.4.2
+BuildRequires:	xorg-lib-libXfont2-devel >= 2.0.0
 BuildRequires:	xorg-lib-libXi-devel >= 1.2.99.1
 BuildRequires:	xorg-lib-libXmu-devel
 BuildRequires:	xorg-lib-libXpm-devel
@@ -65,6 +66,7 @@ BuildRequires:	xorg-lib-libXxf86misc-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
 BuildRequires:	xorg-lib-libfontenc-devel
 BuildRequires:	xorg-lib-libpciaccess-devel >= 0.13
+BuildRequires:	xorg-lib-libxcvt-devel
 BuildRequires:	xorg-lib-libxkbfile-devel
 BuildRequires:	xorg-lib-libxkbui-devel >= 1.0.2
 BuildRequires:	xorg-lib-libxshmfence-devel >= 1.1
