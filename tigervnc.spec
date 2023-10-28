@@ -62,13 +62,11 @@ BuildRequires:	xorg-lib-libXt-devel >= 1.0.0
 BuildRequires:	xorg-lib-libXtst-devel >= 1.0.99.2
 BuildRequires:	xorg-lib-libXv-devel
 BuildRequires:	xorg-lib-libXxf86dga-devel
-BuildRequires:	xorg-lib-libXxf86misc-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
 BuildRequires:	xorg-lib-libfontenc-devel
 BuildRequires:	xorg-lib-libpciaccess-devel >= 0.13
 BuildRequires:	xorg-lib-libxcvt-devel
 BuildRequires:	xorg-lib-libxkbfile-devel
-BuildRequires:	xorg-lib-libxkbui-devel >= 1.0.2
 BuildRequires:	xorg-lib-libxshmfence-devel >= 1.1
 BuildRequires:	xorg-lib-xtrans-devel >= 1.2.2
 BuildRequires:	xorg-proto-bigreqsproto-devel >= 1.1.0
