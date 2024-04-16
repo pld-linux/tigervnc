@@ -3,47 +3,53 @@
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
-Version:	1.12.0
-Release:	10
+Version:	1.13.1
+Release:	1
 License:	GPL v2
 Group:		X11/Applications/Networking
 #Source0Download: https://github.com/TigerVNC/tigervnc/releases
 Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	e92945f43654e2a120f2c9d8b3a9b869
+# Source0-md5:	3a794e3a063443e07250de8e99e2e05a
 Source1:	%{name}.desktop
 Source2:	vncserver.init
 Source3:	vncserver.sysconfig
 Patch4:		%{name}-shebang.patch
-Patch5:		xserver-1.21.patch
 Patch100:	xserver.patch
-URL:		http://www.tigervnc.com/
+URL:		https://tigervnc.org/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
 BuildRequires:	ImageMagick-coder-svg
+BuildRequires:	OpenGL-devel >= 1.2
 BuildRequires:	Mesa-dri-devel >= 7.8.1
-BuildRequires:	Mesa-libGL-devel >= 7.8.1
 BuildRequires:	cpp
-BuildRequires:	cmake >= 3.4.0
+BuildRequires:	cmake >= 3.10.0
+# libavcodec libavutil libswscale
+BuildRequires:	ffmpeg-devel
 BuildRequires:	fltk-devel
 BuildRequires:	gettext-tools
 BuildRequires:	gnutls-devel
 BuildRequires:	libjpeg-turbo-devel
+BuildRequires:	libstdc++-devel
+BuildRequires:	nettle-devel
 BuildRequires:	xorg-xserver-server-source >= %{xversion}
 BuildRequires:	zlib-devel
 # xserver BRs, should match xorg-xserver-server.spec
 # for glx headers
 BuildRequires:	OpenGL-GLX-devel
-BuildRequires:	autoconf >= 2.57
+BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake
-BuildRequires:	libdrm-devel >= 2.4.5
-BuildRequires:	libtool
+BuildRequires:	libdrm-devel >= 2.4.89
+BuildRequires:	libselinux-devel >= 2.0.86
+BuildRequires:	libtool >= 2:2.2
+BuildRequires:	libunwind-devel
 BuildRequires:	nasm
 BuildRequires:	ncurses-devel
 BuildRequires:	pam-devel
 BuildRequires:	perl-base
-BuildRequires:	pixman-devel >= 0.16.0
+BuildRequires:	pixman-devel >= 0.27.2
 BuildRequires:	pkgconfig >= 1:0.19
 BuildRequires:	rpmbuild(macros) >= 1.647
+BuildRequires:	systemd-devel >= 1:209
 BuildRequires:	xorg-app-mkfontscale
 BuildRequires:	xorg-font-font-util >= 1.1
 BuildRequires:	xorg-lib-libX11-devel
@@ -56,6 +62,7 @@ BuildRequires:	xorg-lib-libXfont2-devel >= 2.0.0
 BuildRequires:	xorg-lib-libXi-devel >= 1.2.99.1
 BuildRequires:	xorg-lib-libXmu-devel
 BuildRequires:	xorg-lib-libXpm-devel
+BuildRequires:	xorg-lib-libXrandr-devel
 BuildRequires:	xorg-lib-libXrender-devel
 BuildRequires:	xorg-lib-libXres-devel
 BuildRequires:	xorg-lib-libXt-devel >= 1.0.0
@@ -68,33 +75,34 @@ BuildRequires:	xorg-lib-libpciaccess-devel >= 0.13
 BuildRequires:	xorg-lib-libxcvt-devel
 BuildRequires:	xorg-lib-libxkbfile-devel
 BuildRequires:	xorg-lib-libxshmfence-devel >= 1.1
-BuildRequires:	xorg-lib-xtrans-devel >= 1.2.2
+BuildRequires:	xorg-lib-xtrans-devel >= 1.3.5
 BuildRequires:	xorg-proto-bigreqsproto-devel >= 1.1.0
 BuildRequires:	xorg-proto-damageproto-devel >= 1.1
-BuildRequires:	xorg-proto-dri3proto-devel >= 1.0
-BuildRequires:	xorg-proto-fixesproto-devel >= 4.1
+BuildRequires:	xorg-proto-dri2proto-devel >= 2.8
+BuildRequires:	xorg-proto-dri3proto-devel >= 1.2
+BuildRequires:	xorg-proto-fixesproto-devel >= 6.0
 BuildRequires:	xorg-proto-fontcacheproto-devel
-BuildRequires:	xorg-proto-fontsproto-devel
-BuildRequires:	xorg-proto-glproto-devel >= 1.4.10
-BuildRequires:	xorg-proto-inputproto-devel >= 1.9.99.902
+BuildRequires:	xorg-proto-fontsproto-devel >= 2.1.3
+BuildRequires:	xorg-proto-glproto-devel >= 1.4.17
+BuildRequires:	xorg-proto-inputproto-devel >= 2.3.99.1
 BuildRequires:	xorg-proto-kbproto-devel >= 1.0.3
-BuildRequires:	xorg-proto-presentproto-devel >= 1.0
+BuildRequires:	xorg-proto-presentproto-devel >= 1.2
 BuildRequires:	xorg-proto-printproto-devel
-BuildRequires:	xorg-proto-randrproto-devel >= 1.3
-BuildRequires:	xorg-proto-recordproto-devel
+BuildRequires:	xorg-proto-randrproto-devel >= 1.6.0
+BuildRequires:	xorg-proto-recordproto-devel >= 1.14
 BuildRequires:	xorg-proto-renderproto-devel >= 0.11
-BuildRequires:	xorg-proto-resourceproto-devel
+BuildRequires:	xorg-proto-resourceproto-devel >= 1.2.0
 BuildRequires:	xorg-proto-scrnsaverproto-devel >= 1.1.0
 BuildRequires:	xorg-proto-videoproto-devel
 BuildRequires:	xorg-proto-xcmiscproto-devel >= 1.2.0
-BuildRequires:	xorg-proto-xextproto-devel >= 1:7.0.99.3
+BuildRequires:	xorg-proto-xextproto-devel >= 1:7.3
 BuildRequires:	xorg-proto-xf86bigfontproto-devel >= 1.2.0
 BuildRequires:	xorg-proto-xf86dgaproto-devel >= 2.0.99.1
 BuildRequires:	xorg-proto-xf86driproto-devel >= 2.1.0
 BuildRequires:	xorg-proto-xf86miscproto-devel
 BuildRequires:	xorg-proto-xf86vidmodeproto-devel >= 2.2.99.1
-BuildRequires:	xorg-proto-xproto-devel >= 7.0.22
-BuildRequires:	xorg-util-util-macros >= 1.10
+BuildRequires:	xorg-proto-xproto-devel >= 7.0.31
+BuildRequires:	xorg-util-util-macros >= 1.14
 Requires(post,postun):	gtk-update-icon-cache
 Requires(post,postun):	hicolor-icon-theme
 Requires:	libjpeg-turbo
@@ -124,13 +132,18 @@ Requires(post,preun,postun):	systemd-units >= 38
 Requires:	xorg-app-rgb
 # for vncpasswd tool
 Requires:	%{name}-utils = %{version}-%{release}
-# for mcookie
 Requires:	libjpeg-turbo
+Requires:	libselinux >= 2.0.86
+Requires:	pixman >= 0.27.2
 Requires:	systemd-units >= 38
+# for mcookie
 Requires:	util-linux
 Requires:	xkeyboard-config
 Requires:	xorg-app-xauth
 Requires:	xorg-app-xkbcomp
+Requires:	xorg-lib-libXext >= 1.0.99.4
+Requires:	xorg-lib-libXfont2 >= 2.0.0
+Requires:	xorg-lib-libXtst >= 1.0.99.2
 Obsoletes:	vnc-server
 
 %description server
@@ -163,6 +176,7 @@ Summary:	TigerVNC module for X.org server
 Summary(pl.UTF-8):	Moduł TigerVNC dla servera X.org
 Group:		X11/Servers
 %requires_eq_to xorg-xserver-server xorg-xserver-server-source
+Requires:	pixman >= 0.27.2
 Provides:	xorg-xserver-module(vnc)
 
 %description -n xorg-xserver-libvnc
@@ -178,7 +192,6 @@ zdalny dostęp do pulpitu.
 %patch4 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
-%patch5 -p1
 cd unix/xserver
 %patch100 -p1
 
@@ -278,6 +291,7 @@ fi
 %doc README.rst doc/*
 %attr(755,root,root) %{_bindir}/vncviewer
 %{_mandir}/man1/vncviewer.1*
+%{_datadir}/metainfo/org.tigervnc.vncviewer.metainfo.xml
 %{_desktopdir}/tigervnc.desktop
 %{_desktopdir}/vncviewer.desktop
 %{_iconsdir}/hicolor/*/apps/tigervnc.*
