@@ -1,3 +1,6 @@
+%bcond_without	h264	# H264 support
+%bcond_without	systemd	# systemd
+
 %define		xversion	1.21.0
 
 Summary:	A TigerVNC remote display system
@@ -24,7 +27,7 @@ BuildRequires:	Mesa-dri-devel >= 7.8.1
 BuildRequires:	cpp
 BuildRequires:	cmake >= 3.10.0
 # libavcodec libavutil libswscale
-BuildRequires:	ffmpeg-devel
+%{?with_h264:BuildRequires:	ffmpeg-devel}
 BuildRequires:	fltk-devel
 BuildRequires:	gettext-tools
 BuildRequires:	gnutls-devel
@@ -49,7 +52,7 @@ BuildRequires:	perl-base
 BuildRequires:	pixman-devel >= 0.27.2
 BuildRequires:	pkgconfig >= 1:0.19
 BuildRequires:	rpmbuild(macros) >= 1.647
-BuildRequires:	systemd-devel >= 1:209
+%{?with_systemd:BuildRequires:	systemd-devel >= 1:209}
 BuildRequires:	xorg-app-mkfontscale
 BuildRequires:	xorg-font-font-util >= 1.1
 BuildRequires:	xorg-lib-libX11-devel
@@ -197,6 +200,7 @@ cd unix/xserver
 
 %build
 %cmake . \
+	%{!?with_h264:-DENABLE_H264=OFF} \
 	-DCMAKE_INSTALL_UNITDIR=%{systemdunitdir}
 %{__make}
 
