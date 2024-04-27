@@ -80,6 +80,7 @@ BuildRequires:	xorg-lib-libxkbfile-devel
 BuildRequires:	xorg-lib-libxshmfence-devel >= 1.1
 BuildRequires:	xorg-lib-xtrans-devel >= 1.3.5
 BuildRequires:	xorg-proto-bigreqsproto-devel >= 1.1.0
+BuildRequires:	xorg-proto-compositeproto-devel => 0.4
 BuildRequires:	xorg-proto-damageproto-devel >= 1.1
 BuildRequires:	xorg-proto-dri2proto-devel >= 2.8
 BuildRequires:	xorg-proto-dri3proto-devel >= 1.2
