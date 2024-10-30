@@ -6,13 +6,13 @@
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
-Version:	1.13.1
-Release:	2
+Version:	1.14.1
+Release:	1
 License:	GPL v2
 Group:		X11/Applications/Networking
 #Source0Download: https://github.com/TigerVNC/tigervnc/releases
 Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	3a794e3a063443e07250de8e99e2e05a
+# Source0-md5:	f1084a68a023da623bf100015a4573fa
 Source1:	%{name}.desktop
 Source2:	vncserver.init
 Source3:	vncserver.sysconfig
@@ -60,6 +60,7 @@ BuildRequires:	xorg-lib-libXaw-devel
 BuildRequires:	xorg-lib-libXdamage-devel
 BuildRequires:	xorg-lib-libXdmcp-devel
 BuildRequires:	xorg-lib-libXext-devel >= 1.0.99.4
+BuildRequires:	xorg-lib-libXfixes-devel
 BuildRequires:	xorg-lib-libXfont2-devel >= 2.0.0
 BuildRequires:	xorg-lib-libXi-devel >= 1.2.99.1
 BuildRequires:	xorg-lib-libXmu-devel
