@@ -45,7 +45,6 @@ BuildRequires:	libdrm-devel >= 2.4.89
 BuildRequires:	libselinux-devel >= 2.0.86
 BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libunwind-devel
-BuildRequires:	nasm
 BuildRequires:	ncurses-devel
 BuildRequires:	pam-devel
 BuildRequires:	perl-base
