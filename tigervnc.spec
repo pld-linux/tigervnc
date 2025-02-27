@@ -22,10 +22,10 @@ URL:		https://tigervnc.org/
 BuildRequires:	ImageMagick
 BuildRequires:	ImageMagick-coder-png
 BuildRequires:	ImageMagick-coder-svg
-BuildRequires:	OpenGL-devel >= 1.2
 BuildRequires:	Mesa-dri-devel >= 7.8.1
-BuildRequires:	cpp
+BuildRequires:	OpenGL-devel >= 1.2
 BuildRequires:	cmake >= 3.10.0
+BuildRequires:	cpp
 # libavcodec libavutil libswscale
 %{?with_h264:BuildRequires:	ffmpeg-devel}
 BuildRequires:	fltk-devel
@@ -193,11 +193,11 @@ zdalny dostęp do pulpitu.
 
 %prep
 %setup -q
-%patch4 -p1
+%patch -P 4 -p1
 
 cp -a %{_usrsrc}/xorg-xserver-server-%{_xserverver}/* unix/xserver
 cd unix/xserver
-%patch100 -p1
+%patch -P 100 -p1
 
 %build
 %cmake . \
