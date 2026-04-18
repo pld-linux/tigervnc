@@ -6,13 +6,13 @@
 Summary:	A TigerVNC remote display system
 Summary(pl.UTF-8):	System zdalnego dostępu TigerVNC
 Name:		tigervnc
-Version:	1.15.0
-Release:	6
+Version:	1.16.2
+Release:	1
 License:	GPL v2
 Group:		X11/Applications/Networking
 #Source0Download: https://github.com/TigerVNC/tigervnc/releases
 Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	c8b8203dab00c7862dade8d964cec258
+# Source0-md5:	61c6b4af2bc925c7ef4110b8a52d3d2f
 Source1:	%{name}.desktop
 Source2:	vncserver.init
 Source3:	vncserver.sysconfig
@@ -41,18 +41,22 @@ BuildRequires:	zlib-devel
 BuildRequires:	OpenGL-GLX-devel
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake
+BuildRequires:	glib2-devel
 BuildRequires:	libdrm-devel >= 2.4.89
 BuildRequires:	libpwquality-devel
 BuildRequires:	libselinux-devel >= 2.0.86
 BuildRequires:	libtool >= 2:2.2
+BuildRequires:	libuuid-devel
 BuildRequires:	libunwind-devel
 BuildRequires:	ncurses-devel
 BuildRequires:	pam-devel
 BuildRequires:	perl-base
+BuildRequires:	pipewire-devel >= 0.3
 BuildRequires:	pixman-devel >= 0.27.2
 BuildRequires:	pkgconfig >= 1:0.19
-BuildRequires:	rpmbuild(macros) >= 1.647
+BuildRequires:	rpmbuild(macros) >= 2.047
 %{?with_systemd:BuildRequires:	systemd-devel >= 1:209}
+BuildRequires:	wayland-devel
 BuildRequires:	xorg-app-mkfontscale
 BuildRequires:	xorg-font-font-util >= 1.1
 BuildRequires:	xorg-lib-libX11-devel
@@ -77,6 +81,7 @@ BuildRequires:	xorg-lib-libXxf86vm-devel
 BuildRequires:	xorg-lib-libfontenc-devel
 BuildRequires:	xorg-lib-libpciaccess-devel >= 0.13
 BuildRequires:	xorg-lib-libxcvt-devel
+BuildRequires:	xorg-lib-libxkbcommon-devel
 BuildRequires:	xorg-lib-libxkbfile-devel
 BuildRequires:	xorg-lib-libxshmfence-devel >= 1.1
 BuildRequires:	xorg-lib-xtrans-devel >= 1.3.5
@@ -128,7 +133,7 @@ wydajności i funkcjonalności zdalnego wyświetlania. Pierwotnie
 oprogramowanie oparte było na (nigdy nie wydanej) gałęzi VNC 4
 TightVNC.
 
-%package server
+%package server-x11
 Summary:	VNC X server - TigerVNC version
 Summary(pl.UTF-8):	X serwer VNC - wersja TigerVNC
 Group:		X11/Applications/Networking
@@ -149,13 +154,26 @@ Requires:	xorg-app-xkbcomp
 Requires:	xorg-lib-libXext >= 1.0.99.4
 Requires:	xorg-lib-libXfont2 >= 2.0.0
 Requires:	xorg-lib-libXtst >= 1.0.99.2
+Provides:	tigervnc-server = %{version}
+Obsoletes:	tigervnc-server < 1.16.2
 Obsoletes:	vnc-server
 
-%description server
+%description server-x11
 This package contains VNC X server in TigerVNC version.
 
-%description server -l pl.UTF-8
+%description server-x11 -l pl.UTF-8
 Ten pakiet zawiera X serwer VNC w wersji TigerVNC.
+
+%package server-wayland
+Summary:	VNC server for Wayland session
+Summary(pl.UTF-8):	Serwer VNC dla sesji Wayland
+Group:		X11/Applications/Networking
+
+%description server-wayland
+VNC server for Wayland session.
+
+%description server-wayland -l pl.UTF-8
+Serwer VNC dla sesji Wayland.
 
 %package utils
 Summary:	Additional utilities for TigerVNC
@@ -203,6 +221,8 @@ cd unix/xserver
 %build
 %cmake . \
 	%{!?with_h264:-DENABLE_H264=OFF} \
+	-DENABLE_SYSTEMD=%{__ON_OFF systemd} \
+	-DINSTALL_SYSTEMD_UNITS=%{__ON_OFF systemd} \
 	-DCMAKE_INSTALL_UNITDIR=%{systemdunitdir}
 %{__make}
 
@@ -279,17 +299,17 @@ rm -rf $RPM_BUILD_ROOT
 [ ! -x %{_bindir}/update-desktop-database ] || %update_desktop_database_postun
 %update_icon_cache hicolor
 
-%post server
+%post server-x11
 /sbin/chkconfig --add vncserver
 %service vncserver restart "VNC server"
 
-%preun server
+%preun server-x11
 if [ "$1" = "0" ]; then
 	%service vncserver stop
 	/sbin/chkconfig --del vncserver
 fi
 
-%postun server
+%postun server-x11
 %systemd_reload
 
 %files -f %{name}.lang
@@ -302,7 +322,7 @@ fi
 %{_desktopdir}/vncviewer.desktop
 %{_iconsdir}/hicolor/*/apps/tigervnc.*
 
-%files server
+%files server-x11
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/Xvnc
 %attr(755,root,root) %{_bindir}/vncserver
@@ -317,11 +337,17 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/tigervnc/vncserver-config-mandatory
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/tigervnc/vncserver.users
 %config(noreplace) %verify(not md5 mtime size) /etc/pam.d/tigervnc
-%{systemdunitdir}/vncserver@.service
+%{?with_systemd:%{systemdunitdir}/vncserver@.service}
 %{_mandir}/man1/Xvnc.1*
 %{_mandir}/man1/x0vncserver.1*
 %{_mandir}/man8/vncserver.8*
 %{_mandir}/man8/vncsession.8*
+
+%files server-wayland
+%attr(755,root,root) %{_bindir}/w0vncserver
+%attr(755,root,root) %{_bindir}/w0vncserver-forget
+%{_mandir}/man1/w0vncserver.1*
+%{_mandir}/man1/w0vncserver-forget.1*
 
 %files utils
 %defattr(644,root,root,755)
