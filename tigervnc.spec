@@ -1,5 +1,7 @@
+#
+# Conditional build:
 %bcond_without	h264	# H264 support
-%bcond_without	systemd	# systemd
+%bcond_without	systemd	# systemd service
 
 %define		xversion	1.21.0
 
@@ -28,35 +30,37 @@ BuildRequires:	cmake >= 3.10.0
 BuildRequires:	cpp
 # libavcodec libavutil libswscale
 %{?with_h264:BuildRequires:	ffmpeg-devel}
-BuildRequires:	fltk-devel
+BuildRequires:	fltk-devel >= 1.3
+BuildRequires:	fltk-devel < 1.4
 BuildRequires:	gettext-tools
+BuildRequires:	glib2-devel >= 1:2.0
 BuildRequires:	gnutls-devel
 BuildRequires:	libjpeg-turbo-devel
-BuildRequires:	libstdc++-devel
+BuildRequires:	libpwquality-devel
+BuildRequires:	libselinux-devel >= 2.0.86
+BuildRequires:	libstdc++-devel >= 6:4.7
+BuildRequires:	libuuid-devel
 BuildRequires:	nettle-devel
+BuildRequires:	pipewire-devel >= 0.3
+BuildRequires:	rpmbuild(macros) >= 2.047
+%{?with_systemd:BuildRequires:	systemd-devel >= 1:209}
+BuildRequires:	wayland-devel
+BuildRequires:	xorg-lib-libxkbcommon-devel
 BuildRequires:	xorg-xserver-server-source >= %{xversion}
 BuildRequires:	zlib-devel
-# xserver BRs, should match xorg-xserver-server.spec
+# -- xserver BRs, should match xorg-xserver-server.spec
 # for glx headers
 BuildRequires:	OpenGL-GLX-devel
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake
-BuildRequires:	glib2-devel
 BuildRequires:	libdrm-devel >= 2.4.89
-BuildRequires:	libpwquality-devel
-BuildRequires:	libselinux-devel >= 2.0.86
 BuildRequires:	libtool >= 2:2.2
-BuildRequires:	libuuid-devel
 BuildRequires:	libunwind-devel
 BuildRequires:	ncurses-devel
 BuildRequires:	pam-devel
 BuildRequires:	perl-base
-BuildRequires:	pipewire-devel >= 0.3
 BuildRequires:	pixman-devel >= 0.27.2
 BuildRequires:	pkgconfig >= 1:0.19
-BuildRequires:	rpmbuild(macros) >= 2.047
-%{?with_systemd:BuildRequires:	systemd-devel >= 1:209}
-BuildRequires:	wayland-devel
 BuildRequires:	xorg-app-mkfontscale
 BuildRequires:	xorg-font-font-util >= 1.1
 BuildRequires:	xorg-lib-libX11-devel
@@ -81,7 +85,6 @@ BuildRequires:	xorg-lib-libXxf86vm-devel
 BuildRequires:	xorg-lib-libfontenc-devel
 BuildRequires:	xorg-lib-libpciaccess-devel >= 0.13
 BuildRequires:	xorg-lib-libxcvt-devel
-BuildRequires:	xorg-lib-libxkbcommon-devel
 BuildRequires:	xorg-lib-libxkbfile-devel
 BuildRequires:	xorg-lib-libxshmfence-devel >= 1.1
 BuildRequires:	xorg-lib-xtrans-devel >= 1.3.5
@@ -337,7 +340,9 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/tigervnc/vncserver-config-mandatory
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/tigervnc/vncserver.users
 %config(noreplace) %verify(not md5 mtime size) /etc/pam.d/tigervnc
-%{?with_systemd:%{systemdunitdir}/vncserver@.service}
+%if %{with systemd}
+%{systemdunitdir}/vncserver@.service
+%endif
 %{_mandir}/man1/Xvnc.1*
 %{_mandir}/man1/x0vncserver.1*
 %{_mandir}/man8/vncserver.8*
